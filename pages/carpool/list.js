@@ -35,9 +35,16 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    console.log('拼车列表页面显示')
-    // 从其他页面返回时刷新数据
-    this.refreshData()
+    console.log('🔍 拼车列表页面显示 - onShow触发')
+    console.log('🔍 当前数据状态:', {
+      carpools: this.data.carpools.length,
+      loading: this.data.loading,
+      page: this.data.page
+    })
+    
+    // 强制刷新数据 - 特别针对TabBar页面的缓存问题
+    console.log('🔄 强制刷新数据...')
+    this.forceRefresh()
   },
 
   /**
@@ -79,13 +86,19 @@ Page({
 
   // 加载拼车列表
   async loadCarpools(isRefresh = false) {
-    if (this.data.loading && !isRefresh) return
+    console.log('📡 loadCarpools 开始执行', { isRefresh, loading: this.data.loading })
+    
+    if (this.data.loading && !isRefresh) {
+      console.log('⚠️  loadCarpools 被阻止 - 正在加载中')
+      return
+    }
     
     this.setData({ 
       loading: true 
     })
 
     try {
+      console.log('🚀 开始调用云函数 carpool-list')
       // 从云函数获取真实数据
       const result = await wx.cloud.callFunction({
         name: 'carpool-list',
@@ -97,8 +110,11 @@ Page({
         }
       })
 
+      console.log('✅ 云函数调用成功:', result.result)
+
       if (result.result.success) {
         let newCarpools = result.result.data || []
+        console.log('📊 获得拼车数据:', newCarpools.length, '条')
         
         this.setData({
           carpools: isRefresh ? newCarpools : [...this.data.carpools, ...newCarpools],
@@ -115,7 +131,7 @@ Page({
       }
 
     } catch (error) {
-      console.error('加载拼车列表失败:', error)
+      console.error('❌ 加载拼车列表失败:', error)
       this.setData({ loading: false })
       wx.showToast({
         title: '加载失败，请重试',
@@ -134,6 +150,7 @@ Page({
 
   // 刷新数据
   refreshData() {
+    console.log('🔄 refreshData 被调用')
     this.setData({
       carpools: [],
       page: 1,
@@ -252,5 +269,22 @@ Page({
   // 阻止冒泡
   stopPropagation() {
     // 阻止事件冒泡
+  },
+
+  // 强制刷新数据（专门处理TabBar页面缓存问题）
+  forceRefresh() {
+    console.log('💪 执行强制刷新')
+    // 清空当前数据
+    this.setData({
+      carpools: [],
+      page: 1,
+      hasMore: true,
+      loading: false
+    })
+    
+    // 延迟一点再加载，确保数据被清空
+    setTimeout(() => {
+      this.loadCarpools(true)
+    }, 100)
   }
 })

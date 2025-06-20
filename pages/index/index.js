@@ -11,31 +11,65 @@ Page({
 
   onLoad() {
     console.log('首页加载')
-    this.checkLoginStatus()
+    // 延迟检查登录状态，确保 app 初始化完成
+    setTimeout(() => {
+      this.initPage()
+    }, 100)
   },
 
   onShow() {
     console.log('首页显示')
-    if (!this.checkLoginStatus()) {
+    this.initPage()
+  },
+
+  // 初始化页面
+  initPage() {
+    console.log('初始化页面开始')
+    
+    // 检查登录状态，但不阻塞页面显示
+    const isLoggedIn = this.checkLoginStatus()
+    
+    if (!isLoggedIn) {
+      console.log('用户未登录，显示未登录状态')
+      this.setData({ 
+        loading: false,
+        hasUserInfo: false,
+        userInfo: null,
+        recentCarpools: [],
+        hotCarpools: []
+      })
       return;
     }
     
-    this.loadRecentCarpools()
+    console.log('用户已登录，开始加载数据')
+    // 加载页面数据
+    this.loadPageData()
   },
 
   // 检查登录状态
   checkLoginStatus() {
-    const hasLogin = app.checkLoginStatus()
-    if (!hasLogin) {
-      // 未登录，跳转到登录页面
+    try {
+      // 直接检查本地存储，避免触发自动跳转
+      const userInfo = wx.getStorageSync('userInfo');
+      const hasUserInfo = userInfo && userInfo.nickName && !userInfo.isGuest;
+      
+      if (hasUserInfo) {
+        this.setData({
+          userInfo: userInfo,
+          hasUserInfo: true
+        })
+        // 同步到全局状态
+        const app = getApp()
+        app.globalData.userInfo = userInfo
+        app.globalData.hasLogin = true
+      }
+      
+      return hasUserInfo
+    } catch (error) {
+      console.error('检查登录状态失败:', error)
+      this.setData({ loading: false })
       return false
     }
-    
-    this.setData({
-      userInfo: app.globalData.userInfo,
-      hasUserInfo: true
-    })
-    return true
   },
 
   // 加载页面数据
@@ -43,12 +77,14 @@ Page({
     this.setData({ loading: true })
     
     try {
+      console.log('开始并行加载页面数据')
       // 并行加载数据
       const [recentResult, hotResult] = await Promise.all([
         this.loadRecentCarpools(),
         this.loadHotCarpools()
       ])
       
+      console.log('页面数据加载完成')
       this.setData({
         recentCarpools: recentResult,
         hotCarpools: hotResult,
@@ -58,12 +94,17 @@ Page({
     } catch (error) {
       console.error('加载页面数据失败:', error)
       this.setData({ loading: false })
+      wx.showToast({
+        title: '加载失败',
+        icon: 'none'
+      })
     }
   },
 
   // 加载最新拼车
   async loadRecentCarpools() {
     try {
+      console.log('开始加载最新拼车')
       const result = await wx.cloud.callFunction({
         name: 'carpool-list',
         data: {
@@ -73,9 +114,20 @@ Page({
         }
       })
       
-      return result.result.data || []
+      console.log('最新拼车加载结果:', result)
+      
+      if (result.result && result.result.success) {
+        return result.result.data || []
+      } else {
+        console.error('加载最新拼车失败:', result.result)
+        return []
+      }
     } catch (error) {
       console.error('加载最新拼车失败:', error)
+      wx.showToast({
+        title: '网络错误',
+        icon: 'none'
+      })
       return []
     }
   },
@@ -83,6 +135,7 @@ Page({
   // 加载热门拼车
   async loadHotCarpools() {
     try {
+      console.log('开始加载热门拼车')
       const result = await wx.cloud.callFunction({
         name: 'carpool-list',
         data: {
@@ -91,9 +144,20 @@ Page({
         }
       })
       
-      return result.result.data || []
+      console.log('热门拼车加载结果:', result)
+      
+      if (result.result && result.result.success) {
+        return result.result.data || []
+      } else {
+        console.error('加载热门拼车失败:', result.result)
+        return []
+      }
     } catch (error) {
       console.error('加载热门拼车失败:', error)
+      wx.showToast({
+        title: '网络错误',
+        icon: 'none'
+      })
       return []
     }
   },

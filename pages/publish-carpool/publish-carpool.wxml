@@ -93,6 +93,18 @@
           <text class="price-unit">元/人</text>
         </view>
       </view>
+
+      <view class="form-item">
+        <view class="item-label">发布者参与</view>
+        <view class="switch-container">
+          <switch 
+            checked="{{formData.organizerJoins}}"
+            bindchange="onOrganizerJoinsChange"
+            color="#ffc1cc"
+          />
+          <text class="switch-desc">{{formData.organizerJoins ? '我也参与这次拼车' : '我只是组织者，不参与拼车'}}</text>
+        </view>
+      </view>
     </view>
 
     <!-- 详细信息 -->

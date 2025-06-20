@@ -1,7 +1,7 @@
 /* pages/carpool-detail/carpool-detail.wxss */
 /**carpool-detail.wxss**/
 .container {
-  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
+  background: #fef0f0;
   min-height: 100vh;
   padding: 20rpx;
   padding-bottom: 120rpx;
@@ -323,7 +323,7 @@
 }
 
 .disabled-btn {
-  background: #f5f5f5;
+  background: #fef0f0;
   color: #999;
 }
 

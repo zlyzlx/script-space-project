@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "我发布的拼车",
-  "navigationBarBackgroundColor": "#ffc1cc",
+  "navigationBarBackgroundColor": "#ff9aa2",
   "navigationBarTextStyle": "white",
   "backgroundColor": "#ffc1cc",
   "enablePullDownRefresh": true,

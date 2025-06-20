@@ -1,9 +1,10 @@
 /**my-rides.wxss**/
 /* 与 my-carpool.wxss 基本相同，但调整了一些颜色 */
 .container {
-  padding: 0;
-  background-color: #f5f5f5;
+  padding: 20rpx;
+  background: #fef0f0;
   min-height: 100vh;
+  padding-bottom: 120rpx;
 }
 
 .status-filter {
@@ -78,7 +79,7 @@
 }
 
 .ride-status.finished {
-  background-color: #F5F5F5;
+  background-color: #fef0f0;
   color: #999;
 }
 
@@ -186,6 +187,11 @@
 
 .rate-btn {
   background-color: #ffb3ba;
+  color: #666;
+}
+
+.action-btn.secondary {
+  background-color: #fef0f0;
   color: #666;
 }
 

@@ -1,7 +1,7 @@
 /* pages/auth/auth.wxss */
 .auth-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
+  background: #fef0f0;
   display: flex;
   flex-direction: column;
   align-items: center;

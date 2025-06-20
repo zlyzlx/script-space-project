@@ -1,8 +1,9 @@
 /**my-carpool.wxss**/
 .container {
-  padding: 0;
-  background-color: #f5f5f5;
+  padding: 20rpx;
+  background-color: #fef0f0;
   min-height: 100vh;
+  padding-bottom: 120rpx;
 }
 
 /* 状态筛选 */
@@ -198,6 +199,11 @@
 .cancel-btn {
   background-color: #ff9aa2;
   color: white;
+}
+
+.action-btn.secondary {
+  background: #fef0f0;
+  color: #666;
 }
 
 /* 空状态 */

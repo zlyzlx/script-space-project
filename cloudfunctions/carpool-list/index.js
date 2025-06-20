@@ -98,7 +98,7 @@ exports.main = async (event, context) => {
         
         const organizerInfo = organizerResult.data[0] || {
           nickname: '未知用户',
-          avatar: '/images/default-avatar.png'
+          avatar: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
         }
         
         // 获取参与者数量
@@ -108,6 +108,20 @@ exports.main = async (event, context) => {
             status: 'active'
           })
           .count()
+        
+        // 调试信息：输出参与者数据
+        console.log(`拼车ID: ${carpool._id}, 参与者数量: ${participantsResult.total}`)
+        
+        // 如果参与者数量不为0，获取详细信息用于调试
+        if (participantsResult.total > 0) {
+          const participantsDetail = await db.collection('carpool_participants')
+            .where({
+              carpoolId: carpool._id,
+              status: 'active'
+            })
+            .get()
+          console.log(`拼车 ${carpool.activityName} 的参与者详情:`, participantsDetail.data)
+        }
         
         // 格式化发布时间
         const publishTime = new Date(carpool.publishTime)
@@ -138,7 +152,7 @@ exports.main = async (event, context) => {
           price: carpool.price,
           status: carpool.status,
           publisherInfo: {
-            avatarUrl: organizerInfo.avatar || '/images/default-avatar.png',
+            avatarUrl: organizerInfo.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
             nickName: organizerInfo.nickname
           },
           publishTimeText,

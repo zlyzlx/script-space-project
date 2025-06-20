@@ -1,7 +1,7 @@
 /**carpool.wxss**/
 .container {
   padding: 0;
-  background-color: #f5f5f5;
+  background-color: #fef0f0;
   min-height: 100vh;
 }
 

@@ -25,7 +25,8 @@ exports.main = async (event, context) => {
       description,
       requirements,
       notes,
-      status
+      status,
+      organizerJoins
     } = event
     
     // 验证必需参数
@@ -73,6 +74,34 @@ exports.main = async (event, context) => {
     if (requirements !== undefined) updateData.requirements = requirements
     if (notes !== undefined) updateData.notes = notes
     if (status !== undefined) updateData.status = status
+    if (organizerJoins !== undefined) updateData.organizerJoins = organizerJoins
+    
+    // 处理组织者参与状态的变化
+    if (organizerJoins !== undefined && organizerJoins !== carpool.organizerJoins) {
+      const organizerParticipantResult = await db.collection('carpool_participants')
+        .where({
+          carpoolId: carpoolId,
+          userId: userId,
+          isOrganizer: true
+        })
+        .get()
+      
+      if (organizerJoins && organizerParticipantResult.data.length === 0) {
+        // 组织者选择参与，但没有参与记录，创建一个
+        await db.collection('carpool_participants').add({
+          data: {
+            carpoolId: carpoolId,
+            userId: userId,
+            status: 'active',
+            joinTime: new Date(),
+            isOrganizer: true
+          }
+        })
+      } else if (!organizerJoins && organizerParticipantResult.data.length > 0) {
+        // 组织者选择不参与，删除参与记录
+        await db.collection('carpool_participants').doc(organizerParticipantResult.data[0]._id).remove()
+      }
+    }
     
     // 如果更新了最大人数，需要检查当前参与人数
     if (maxCount !== undefined) {

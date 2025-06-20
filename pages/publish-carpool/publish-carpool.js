@@ -12,7 +12,8 @@ Page({
       price: '',
       description: '',
       requirements: '',
-      notes: ''
+      notes: '',
+      organizerJoins: true // 默认发布者参与
     },
     minDate: '',
     maxDate: '',
@@ -97,7 +98,8 @@ Page({
             price: carpoolData.price.toString(),
             description: carpoolData.description || '',
             requirements: carpoolData.requirements || '',
-            notes: carpoolData.notes || ''
+            notes: carpoolData.notes || '',
+            organizerJoins: carpoolData.organizerJoins !== undefined ? carpoolData.organizerJoins : true
           }
         })
       } else {
@@ -139,7 +141,23 @@ Page({
 
   onCountChange(e) {
     this.setData({
-      'formData.maxCount': parseInt(e.detail.value)
+      'formData.maxCount': parseInt(e.detail.value) + 2
+    })
+  },
+
+  // 处理发布者参与开关变化
+  onOrganizerJoinsChange(e) {
+    const checked = e.detail.value
+    this.setData({
+      'formData.organizerJoins': checked
+    })
+    
+    // 提示用户开关的含义
+    const message = checked ? '您将作为参与者加入这次拼车' : '您只负责组织，不占用拼车名额'
+    wx.showToast({
+      title: message,
+      icon: 'none',
+      duration: 2000
     })
   },
 
@@ -290,7 +308,8 @@ Page({
               price: '',
               description: '',
               requirements: '',
-              notes: ''
+              notes: '',
+              organizerJoins: true
             }
           })
           wx.showToast({
@@ -339,87 +358,5 @@ Page({
       return false
     }
     return true
-  },
-
-  // 发布拼车
-  async submitForm() {
-    // 检查登录状态
-    if (!this.checkLoginStatus()) {
-      return;
-    }
-
-    const { activityName, date, time, startLocation, endLocation, maxCount, price, remark } = this.data
-
-    // 基本验证
-    if (!activityName || !date || !time || !startLocation || !endLocation || !maxCount || !price) {
-      wx.showToast({
-        title: '请填写完整信息',
-        icon: 'none'
-      })
-      return
-    }
-
-    if (maxCount < 2 || maxCount > 10) {
-      wx.showToast({
-        title: '人数限制2-10人',
-        icon: 'none'
-      })
-      return
-    }
-
-    if (price <= 0) {
-      wx.showToast({
-        title: '请输入有效价格',
-        icon: 'none'
-      })
-      return
-    }
-
-    wx.showLoading({ title: '发布中...' })
-
-    try {
-      // 调用云函数发布拼车
-      const result = await wx.cloud.callFunction({
-        name: 'carpool-create',
-        data: {
-          activityName: activityName.trim(),
-          date,
-          time,
-          location: startLocation.trim(),
-          fullAddress: endLocation.trim(),
-          maxCount: parseInt(maxCount),
-          price: parseFloat(price),
-          description: remark.trim() || '',
-          requirements: '',
-          notes: ''
-        }
-      })
-
-      wx.hideLoading()
-
-      if (result.result.success) {
-        wx.showToast({
-          title: '发布成功',
-          icon: 'success'
-        })
-
-        // 返回上一页或跳转到拼车列表
-        setTimeout(() => {
-          wx.switchTab({
-            url: '/pages/carpool/list'
-          })
-        }, 1500)
-      } else {
-        throw new Error(result.result.error || '发布失败')
-      }
-
-    } catch (error) {
-      wx.hideLoading()
-      console.error('发布拼车失败:', error)
-      wx.showToast({
-        title: error.message || '发布失败',
-        icon: 'none'
-      })
-    }
   }
 }) 

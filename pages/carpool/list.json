@@ -1,7 +1,9 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "拼车列表",
-  "navigationBarBackgroundColor": "#ffc1cc",
+  "navigationBarBackgroundColor": "#ff9aa2",
   "navigationBarTextStyle": "white",
-  "backgroundColor": "#ffc1cc"
+  "backgroundColor": "#ffc1cc",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50
 }

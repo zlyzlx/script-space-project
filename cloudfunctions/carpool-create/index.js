@@ -22,7 +22,8 @@ exports.main = async (event, context) => {
       price,
       description,
       requirements,
-      notes
+      notes,
+      organizerJoins = true // 默认发布者参与
     } = event
     
     // 验证必填字段
@@ -93,6 +94,7 @@ exports.main = async (event, context) => {
       requirements: requirements || '',
       notes: notes || '',
       organizerId: currentUserId,
+      organizerJoins: organizerJoins, // 保存发布者是否参与的设置
       status: '招募中',
       publishTime: new Date(),
       updateTime: new Date()
@@ -101,6 +103,19 @@ exports.main = async (event, context) => {
     const result = await db.collection('carpools').add({
       data: carpoolData
     })
+    
+    // 如果发布者选择参与，自动创建参与者记录
+    if (organizerJoins) {
+      await db.collection('carpool_participants').add({
+        data: {
+          carpoolId: result._id,
+          userId: currentUserId,
+          status: 'active',
+          joinTime: new Date(),
+          isOrganizer: true // 标记为组织者
+        }
+      })
+    }
     
     return {
       success: true,

@@ -1,7 +1,7 @@
 /**profile.wxss**/
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
+  background: #fef0f0;
   padding: 40rpx 20rpx;
   box-sizing: border-box;
 }
