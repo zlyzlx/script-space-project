@@ -132,21 +132,29 @@ done
 
 ### 1. 云函数列表
 
-| 云函数名称 | 功能描述 | 依赖包 | 内存配置 |
-|-----------|----------|--------|----------|
-| `carpool-list` | 获取拼车列表 | wx-server-sdk | 256MB |
-| `carpool-detail` | 获取拼车详情 | wx-server-sdk | 128MB |
-| `carpool-create` | 创建拼车 | wx-server-sdk | 256MB |
-| `carpool-update` | 更新拼车 | wx-server-sdk | 128MB |
-| `carpool-join` | 参与拼车 | wx-server-sdk | 128MB |
-| `carpool-quit` | 退出拼车 | wx-server-sdk | 128MB |
-| `get-user-info` | 获取用户信息 | wx-server-sdk | 128MB |
-| `update-user-info` | 更新用户信息 | wx-server-sdk | 128MB |
-| `get-user-stats` | 获取用户统计 | wx-server-sdk | 128MB |
-| `get-my-carpools` | 获取我的拼车 | wx-server-sdk | 256MB |
-| `get-my-rides` | 获取我的车次 | wx-server-sdk | 256MB |
-| `get-user-qrcode` | 获取用户二维码 | wx-server-sdk | 128MB |
-| `generate-wechat-qr` | 生成微信二维码 | wx-server-sdk | 256MB |
+| 函数名 | 描述 | 内存配置 |
+|--------|------|----------|
+| carpool-list | 获取拼车列表 | 128MB |
+| carpool-detail | 获取拼车详情 | 128MB |
+| carpool-create | 创建拼车 | 256MB |
+| carpool-update | 更新拼车 | 256MB |
+| carpool-join | 参与拼车 | 256MB |
+| carpool-quit | 退出拼车 | 256MB |
+| carpool-cancel | 取消拼车 | 256MB |
+| get-user-info | 获取用户信息 | 128MB |
+| update-user-info | 更新用户信息 | 256MB |
+| get-user-stats | 获取用户统计信息 | 128MB |
+| get-my-carpools | 获取我发布的拼车 | 128MB |
+| get-my-rides | 获取我参与的拼车 | 128MB |
+| user-carpools | 获取用户发布的拼车 | 128MB |
+| user-rides | 获取用户参与的拼车 | 128MB |
+| user-info | 用户信息管理 | 256MB |
+| user-update | 用户信息更新 | 256MB |
+| generate-qr-code | 生成二维码 | 128MB |
+| get-qr-code | 获取二维码 | 128MB |
+| generate-wechat-qr | 生成微信二维码 | 128MB |
+| get-user-qrcode | 获取用户二维码 | 128MB |
+| db-init | 数据库初始化 | 256MB |
 
 ### 2. 部署流程
 

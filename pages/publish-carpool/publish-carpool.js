@@ -257,16 +257,13 @@ Page({
           }
         }, 1500)
       } else {
-        wx.showToast({
-          title: result.result.error || `${action}失败`,
-          icon: 'none'
-        })
+        throw new Error(result.result.error || `${action}失败`)
       }
     } catch (error) {
       wx.hideLoading()
-      console.error('提交失败：', error)
+      console.error(`${action}拼车失败：`, error)
       wx.showToast({
-        title: `${action}失败，请重试`,
+        title: error.message || `${action}失败`,
         icon: 'none'
       })
     } finally {
@@ -353,58 +350,26 @@ Page({
 
     const { activityName, date, time, startLocation, endLocation, maxCount, price, remark } = this.data
 
-    // 表单验证
-    if (!activityName.trim()) {
+    // 基本验证
+    if (!activityName || !date || !time || !startLocation || !endLocation || !maxCount || !price) {
       wx.showToast({
-        title: '请输入活动名称',
+        title: '请填写完整信息',
         icon: 'none'
       })
       return
     }
 
-    if (!date) {
+    if (maxCount < 2 || maxCount > 10) {
       wx.showToast({
-        title: '请选择出行日期',
+        title: '人数限制2-10人',
         icon: 'none'
       })
       return
     }
 
-    if (!time) {
+    if (price <= 0) {
       wx.showToast({
-        title: '请选择出行时间',
-        icon: 'none'
-      })
-      return
-    }
-
-    if (!startLocation.trim()) {
-      wx.showToast({
-        title: '请输入出发地点',
-        icon: 'none'
-      })
-      return
-    }
-
-    if (!endLocation.trim()) {
-      wx.showToast({
-        title: '请输入目的地',
-        icon: 'none'
-      })
-      return
-    }
-
-    if (!maxCount || maxCount < 1) {
-      wx.showToast({
-        title: '请输入有效的乘车人数',
-        icon: 'none'
-      })
-      return
-    }
-
-    if (!price || price < 0) {
-      wx.showToast({
-        title: '请输入有效的费用',
+        title: '请输入有效价格',
         icon: 'none'
       })
       return
@@ -415,16 +380,18 @@ Page({
     try {
       // 调用云函数发布拼车
       const result = await wx.cloud.callFunction({
-        name: 'carpool-publish',
+        name: 'carpool-create',
         data: {
           activityName: activityName.trim(),
           date,
           time,
-          startLocation: startLocation.trim(),
-          endLocation: endLocation.trim(),
+          location: startLocation.trim(),
+          fullAddress: endLocation.trim(),
           maxCount: parseInt(maxCount),
           price: parseFloat(price),
-          remark: remark.trim()
+          description: remark.trim() || '',
+          requirements: '',
+          notes: ''
         }
       })
 
@@ -438,10 +405,12 @@ Page({
 
         // 返回上一页或跳转到拼车列表
         setTimeout(() => {
-          wx.navigateBack()
+          wx.switchTab({
+            url: '/pages/carpool/list'
+          })
         }, 1500)
       } else {
-        throw new Error(result.result.message || '发布失败')
+        throw new Error(result.result.error || '发布失败')
       }
 
     } catch (error) {
