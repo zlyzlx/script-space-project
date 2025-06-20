@@ -1,7 +1,7 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "我的车次",
-  "navigationBarBackgroundColor": "#4ECDC4",
+  "navigationBarTitleText": "我参与的拼车",
+  "navigationBarBackgroundColor": "#ffc1cc",
   "navigationBarTextStyle": "white",
-  "backgroundColor": "#f5f5f5"
+  "backgroundColor": "#ffc1cc"
 } 

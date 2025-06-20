@@ -7,13 +7,13 @@ Page({
    * 页面的初始数据
    */
   data: {
-    carpools: [],
-    loading: true,
     searchKeyword: '',
-    filterStatus: 'all', // all, 招募中, 已满员
-    hasMore: true,
+    filterStatus: 'all',
+    carpools: [],
+    loading: false,
     page: 1,
-    pageSize: 10
+    pageSize: 10,
+    hasMore: true
   },
 
   /**
@@ -21,11 +21,7 @@ Page({
    */
   onLoad(options) {
     console.log('拼车列表页面加载')
-    // 检查登录状态
-    if (!this.checkLoginStatus()) {
-      return; // 未登录会自动跳转到登录页面
-    }
-    this.loadCarpools()
+    this.loadCarpools(true)
   },
 
   /**
@@ -39,10 +35,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    // 每次显示时检查登录并刷新数据
-    if (!this.checkLoginStatus()) {
-      return; // 未登录会自动跳转到登录页面
-    }
+    console.log('拼车列表页面显示')
+    // 从其他页面返回时刷新数据
     this.refreshData()
   },
 
@@ -64,17 +58,16 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh() {
+    console.log('下拉刷新')
     this.refreshData()
-    wx.stopPullDownRefresh()
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom() {
-    if (this.data.hasMore && !this.data.loading) {
-      this.loadCarpools()
-    }
+    console.log('上拉加载更多')
+    this.loadMoreCarpools()
   },
 
   /**
@@ -93,97 +86,50 @@ Page({
     })
 
     try {
-      // 模拟云函数调用，实际项目中需要替换为真实的云函数
-      const result = {
-        result: {
-          data: this.getMockData()
+      // 从云函数获取真实数据
+      const result = await wx.cloud.callFunction({
+        name: 'carpool-list',
+        data: {
+          page: this.data.page,
+          limit: this.data.pageSize,
+          searchText: this.data.searchKeyword,
+          statusFilter: this.data.filterStatus === 'all' ? '' : this.data.filterStatus
         }
-      }
-
-      let newCarpools = result.result.data || []
-      
-      // 应用搜索和过滤
-      newCarpools = this.applyFilters(newCarpools)
-      
-      this.setData({
-        carpools: isRefresh ? newCarpools : [...this.data.carpools, ...newCarpools],
-        loading: false,
-        hasMore: newCarpools.length === this.data.pageSize,
-        page: isRefresh ? 2 : this.data.page + 1
       })
+
+      if (result.result.success) {
+        let newCarpools = result.result.data || []
+        
+        this.setData({
+          carpools: isRefresh ? newCarpools : [...this.data.carpools, ...newCarpools],
+          loading: false,
+          hasMore: result.result.hasMore,
+          page: isRefresh ? 2 : this.data.page + 1
+        })
+        
+        if (isRefresh) {
+          wx.stopPullDownRefresh()
+        }
+      } else {
+        throw new Error(result.result.error)
+      }
 
     } catch (error) {
       console.error('加载拼车列表失败:', error)
       this.setData({ loading: false })
       wx.showToast({
-        title: '加载失败',
+        title: '加载失败，请重试',
         icon: 'none'
       })
+      wx.stopPullDownRefresh()
     }
   },
 
-  // 应用搜索和过滤条件
-  applyFilters(carpools) {
-    let filteredCarpools = carpools
-
-    // 应用搜索关键词
-    if (this.data.searchKeyword.trim()) {
-      const keyword = this.data.searchKeyword.trim().toLowerCase()
-      filteredCarpools = filteredCarpools.filter(item => 
-        item.activityName.toLowerCase().includes(keyword) ||
-        item.startLocation.toLowerCase().includes(keyword) ||
-        item.endLocation.toLowerCase().includes(keyword)
-      )
-    }
-
-    // 应用状态过滤
-    if (this.data.filterStatus !== 'all') {
-      filteredCarpools = filteredCarpools.filter(item => 
-        item.status === this.data.filterStatus
-      )
-    }
-
-    return filteredCarpools
-  },
-
-  // 获取模拟数据
-  getMockData() {
-    return [
-      {
-        _id: '1',
-        activityName: '测试1',
-        date: '2025-07-20',
-        time: '23:59',
-        startLocation: '起点1',
-        endLocation: '终点1',
-        currentCount: 2,
-        maxCount: 4,
-        price: 35,
-        status: '招募中',
-        publisherInfo: {
-          avatarUrl: '/images/default-avatar.png',
-          nickName: '用户1'
-        },
-        publishTimeText: '2小时前'
-      },
-      {
-        _id: '2',
-        activityName: 'test123',
-        date: '2025-06-20',
-        time: '23:59',
-        startLocation: '起点2',
-        endLocation: '终点2',
-        currentCount: 4,
-        maxCount: 4,
-        price: 30,
-        status: '已满员',
-        publisherInfo: {
-          avatarUrl: '/images/default-avatar.png',
-          nickName: '用户2'
-        },
-        publishTimeText: '1天前'
-      }
-    ]
+  // 加载更多拼车
+  async loadMoreCarpools() {
+    if (!this.data.hasMore || this.data.loading) return
+    
+    await this.loadCarpools(false)
   },
 
   // 刷新数据
@@ -269,19 +215,29 @@ Page({
     wx.showLoading({ title: '加入中...' })
 
     try {
-      await wx.cloud.callFunction({
+      const result = await wx.cloud.callFunction({
         name: 'carpool-join',
         data: { carpoolId }
       })
 
       wx.hideLoading()
-      wx.showToast({
-        title: '加入成功',
-        icon: 'success'
-      })
+      
+      if (result.result.success) {
+        wx.showToast({
+          title: '加入成功',
+          icon: 'success'
+        })
 
-      // 刷新列表
-      this.refreshData()
+        // 刷新列表
+        setTimeout(() => {
+          this.refreshData()
+        }, 1000)
+      } else {
+        wx.showToast({
+          title: result.result.error || '加入失败',
+          icon: 'none'
+        })
+      }
 
     } catch (error) {
       wx.hideLoading()
@@ -293,8 +249,8 @@ Page({
     }
   },
 
-  // 阻止事件冒泡
+  // 阻止冒泡
   stopPropagation() {
-    // 阻止事件冒泡，防止触发上级的点击事件
+    // 阻止事件冒泡
   }
 })

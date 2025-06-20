@@ -50,7 +50,7 @@
         <text class="participants-title">参与者:</text>
         <view class="participants-list">
           <view class="participant" wx:for="{{item.participants}}" wx:key="id" wx:for-item="participant">
-            <image class="participant-avatar" src="{{participant.avatar}}" mode="aspectFill" />
+            <image class="participant-avatar" src="{{participant.avatar}}" mode="scaleToFill" />
             <text class="participant-name">{{participant.nickname}}</text>
           </view>
         </view>

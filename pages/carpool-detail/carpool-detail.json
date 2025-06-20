@@ -1,7 +1,7 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "拼车详情",
-  "navigationBarBackgroundColor": "#667eea",
+  "navigationBarBackgroundColor": "#ffc1cc",
   "navigationBarTextStyle": "white",
-  "backgroundColor": "#667eea"
+  "backgroundColor": "#ffc1cc"
 }

@@ -38,9 +38,9 @@
 }
 
 .filter-item.active {
-  background-color: #FF6B6B;
+  background-color: #ffc1cc;
   color: white;
-  border-color: #FF6B6B;
+  border-color: #ffc1cc;
 }
 
 /* 拼车列表 */
@@ -77,8 +77,8 @@
 }
 
 .status.recruiting {
-  background-color: #E8F5E8;
-  color: #4CAF50;
+  background-color: #ffe4e7;
+  color: #ffc1cc;
 }
 
 .status.full {
@@ -118,7 +118,7 @@
 }
 
 .price {
-  color: #FF6B6B;
+  color: #ffc1cc;
   font-weight: bold;
 }
 
@@ -153,6 +153,8 @@
   height: 60rpx;
   border-radius: 50%;
   margin-bottom: 8rpx;
+  object-fit: cover;
+  object-position: center;
 }
 
 .participant-name {
@@ -189,12 +191,12 @@
 }
 
 .edit-btn {
-  background-color: #4ECDC4;
+  background-color: #ffc1cc;
   color: white;
 }
 
 .cancel-btn {
-  background-color: #FF6B6B;
+  background-color: #ff9aa2;
   color: white;
 }
 
@@ -226,7 +228,7 @@
 }
 
 .publish-btn {
-  background-color: #FF6B6B;
+  background-color: #ffc1cc;
   color: white;
   border-radius: 50rpx;
   padding: 20rpx 60rpx;

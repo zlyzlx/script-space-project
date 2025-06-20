@@ -1,8 +1,8 @@
 {
-  "navigationBarTitleText": "用户信息",
-  "navigationBarBackgroundColor": "#ff6b9d",
+  "navigationBarTitleText": "添加好友",
+  "navigationBarBackgroundColor": "#ffc1cc",
   "navigationBarTextStyle": "white",
-  "backgroundColor": "#f8f9fa",
+  "backgroundColor": "#ffc1cc",
   "enablePullDownRefresh": false,
   "disableScroll": false
 }

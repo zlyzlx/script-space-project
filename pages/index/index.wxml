@@ -3,7 +3,7 @@
   <!-- 用户信息栏 -->
   <view class="user-bar" bindtap="goToProfile">
     <view class="user-info">
-      <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="scaleToFill"></image>
       <view class="user-details">
         <view class="user-name">{{userInfo.nickName || '未登录'}}</view>
         <view class="user-status">{{userInfo.isGuest ? '游客模式' : '欢迎回来'}}</view>

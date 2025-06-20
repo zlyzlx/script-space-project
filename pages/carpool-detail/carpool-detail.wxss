@@ -1,7 +1,7 @@
 /* pages/carpool-detail/carpool-detail.wxss */
 /**carpool-detail.wxss**/
 .container {
-  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
   min-height: 100vh;
   padding: 20rpx;
   padding-bottom: 120rpx;
@@ -108,7 +108,7 @@
 }
 
 .info-value.price {
-  color: #ff4d4f;
+  color: #ffc1cc;
   font-weight: bold;
   font-size: 32rpx;
 }
@@ -152,13 +152,13 @@
 }
 
 .contact-btn {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  background: linear-gradient(135deg, #ffc1cc, #ffb3ba);
+  color: #666;
   padding: 15rpx 30rpx;
   border-radius: 30rpx;
   font-size: 26rpx;
   border: none;
-  box-shadow: 0 4rpx 15rpx rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4rpx 15rpx rgba(255, 193, 204, 0.3);
 }
 
 .contact-btn:active {
@@ -177,6 +177,8 @@
   border-radius: 50%;
   margin-right: 25rpx;
   border: 4rpx solid #f0f0f0;
+  object-fit: cover;
+  object-position: center;
 }
 
 .organizer-details {
@@ -223,6 +225,8 @@
   border-radius: 50%;
   margin-bottom: 15rpx;
   border: 3rpx solid #e8e8e8;
+  object-fit: cover;
+  object-position: center;
 }
 
 .participant-name {
@@ -307,9 +311,9 @@
 }
 
 .join-btn {
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  color: white;
-  box-shadow: 0 8rpx 25rpx rgba(255, 107, 157, 0.3);
+  background: linear-gradient(135deg, #ffc1cc, #ffb3ba);
+  color: #666;
+  box-shadow: 0 8rpx 25rpx rgba(255, 193, 204, 0.3);
 }
 
 .quit-btn {
@@ -324,15 +328,15 @@
 }
 
 .edit-btn {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  box-shadow: 0 6rpx 20rpx rgba(102, 126, 234, 0.3);
+  background: linear-gradient(135deg, #ffc1cc, #ffb3ba);
+  color: #666;
+  box-shadow: 0 6rpx 20rpx rgba(255, 193, 204, 0.3);
 }
 
 .cancel-btn {
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  color: white;
-  box-shadow: 0 6rpx 20rpx rgba(255, 107, 157, 0.3);
+  background: linear-gradient(135deg, #ffc1cc, #ff9aa2);
+  color: #666;
+  box-shadow: 0 6rpx 20rpx rgba(255, 193, 204, 0.3);
 }
 
 .join-btn:active,
@@ -378,18 +382,18 @@
 .price {
   font-size: 40rpx;
   font-weight: bold;
-  color: #ff6b9d;
+  color: #ffc1cc;
   text-align: center;
 }
 
 .location-note {
   margin-top: 15rpx;
   padding: 15rpx 20rpx;
-  background: #fce4ec;
+  background: #ffe4e7;
   border-radius: 10rpx;
   font-size: 24rpx;
   color: #666;
-  border-left: 4rpx solid #ff6b9d;
+  border-left: 4rpx solid #ffc1cc;
 }
 
 /* 二维码弹窗样式 */
@@ -519,13 +523,13 @@
 .save-btn {
   width: 100%;
   height: 88rpx;
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  color: #ffffff;
+  background: linear-gradient(135deg, #ffc1cc, #ffb3ba);
+  color: #666;
   border-radius: 44rpx;
   font-size: 32rpx;
   font-weight: 500;
   border: none;
-  box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.4);
+  box-shadow: 0 8rpx 24rpx rgba(255, 193, 204, 0.4);
 }
 
 .save-btn::after {

@@ -1,6 +1,9 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "剧本杀拼车",
+  "navigationBarBackgroundColor": "#ffc1cc",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#ffc1cc",
   "enablePullDownRefresh": true,
   "onReachBottomDistance": 50
 } 

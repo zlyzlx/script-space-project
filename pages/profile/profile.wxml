@@ -40,7 +40,7 @@
           open-type="chooseAvatar" 
           bind:chooseavatar="chooseAvatar"
         >
-          <image class="user-avatar" src="{{getUserAvatarUrl()}}" mode="aspectFill"></image>
+          <image class="user-avatar" src="{{getUserAvatarUrl()}}" mode="scaleToFill"></image>
           <view class="avatar-edit">📷</view>
         </button>
         
@@ -144,7 +144,7 @@
       
       <view class="qr-body">
         <view class="qr-user-info">
-          <image class="qr-avatar" src="{{getUserAvatarUrl()}}" mode="aspectFill"></image>
+          <image class="qr-avatar" src="{{getUserAvatarUrl()}}" mode="scaleToFill"></image>
           <view class="qr-name">{{getUserNickname()}}</view>
           <view class="qr-tip">扫描二维码，添加我为好友</view>
         </view>

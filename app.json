@@ -12,13 +12,13 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#ffc1cc",
     "navigationBarTitleText": "剧本杀拼车",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#7A7E83",
-    "selectedColor": "#ff6b9d",
+    "selectedColor": "#ffc1cc",
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "list": [

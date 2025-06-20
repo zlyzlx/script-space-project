@@ -1,7 +1,7 @@
 <view class="container">
   <view class="friend-card" wx:if="{{friendInfo}}">
     <view class="friend-header">
-      <image class="friend-avatar" src="{{friendInfo.avatarUrl}}" mode="aspectFill"></image>
+      <image class="friend-avatar" src="{{friendInfo.avatarUrl}}" mode="scaleToFill"></image>
       <view class="friend-details">
         <view class="friend-name">{{friendInfo.nickName}}</view>
         <view class="friend-stats">

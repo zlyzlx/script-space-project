@@ -84,7 +84,7 @@
 
         <!-- 发布者信息 -->
         <view class="publisher-info">
-          <image class="publisher-avatar" src="{{item.publisherInfo.avatarUrl}}" mode="aspectFill"></image>
+          <image class="publisher-avatar" src="{{item.publisherInfo.avatarUrl}}" mode="scaleToFill"></image>
           <view class="publisher-name">{{item.publisherInfo.nickName}}</view>
           <view class="publish-time">{{item.publishTimeText}}</view>
         </view>

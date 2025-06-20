@@ -35,9 +35,9 @@
 }
 
 .filter-item.active {
-  background-color: #4ECDC4;
+  background-color: #ffc1cc;
   color: white;
-  border-color: #4ECDC4;
+  border-color: #ffc1cc;
 }
 
 .rides-list {
@@ -73,8 +73,8 @@
 }
 
 .ride-status.upcoming {
-  background-color: #E8F8F5;
-  color: #4ECDC4;
+  background-color: #ffe4e7;
+  color: #ffc1cc;
 }
 
 .ride-status.finished {
@@ -109,7 +109,7 @@
 }
 
 .price {
-  color: #4ECDC4;
+  color: #ffc1cc;
   font-weight: bold;
 }
 
@@ -143,6 +143,8 @@
   height: 60rpx;
   border-radius: 50%;
   margin-bottom: 8rpx;
+  object-fit: cover;
+  object-position: center;
 }
 
 .participant-name {
@@ -173,18 +175,18 @@
 }
 
 .contact-btn {
-  background-color: #4ECDC4;
+  background-color: #ffc1cc;
   color: white;
 }
 
 .quit-btn {
-  background-color: #FF6B6B;
+  background-color: #ff9aa2;
   color: white;
 }
 
 .rate-btn {
-  background-color: #FFD93D;
-  color: #333;
+  background-color: #ffb3ba;
+  color: #666;
 }
 
 .empty-state {
@@ -213,7 +215,7 @@
 }
 
 .browse-btn {
-  background-color: #4ECDC4;
+  background-color: #ffc1cc;
   color: white;
   border-radius: 50rpx;
   padding: 20rpx 60rpx;

@@ -44,6 +44,9 @@ exports.main = async (event, context) => {
     // 状态筛选
     if (statusFilter) {
       query.status = statusFilter
+    } else {
+      // 默认只显示活跃状态的拼车
+      query.status = db.command.neq('deleted')
     }
     
     // 日期筛选
@@ -83,9 +86,70 @@ exports.main = async (event, context) => {
       .where(query)
       .count()
     
+    // 处理每个拼车数据，添加发布者信息和参与者统计
+    const processedData = await Promise.all(
+      result.data.map(async (carpool) => {
+        // 获取发布者信息
+        const organizerResult = await db.collection('users')
+          .where({
+            _openid: carpool.organizerId
+          })
+          .get()
+        
+        const organizerInfo = organizerResult.data[0] || {
+          nickname: '未知用户',
+          avatar: '/images/default-avatar.png'
+        }
+        
+        // 获取参与者数量
+        const participantsResult = await db.collection('carpool_participants')
+          .where({
+            carpoolId: carpool._id,
+            status: 'active'
+          })
+          .count()
+        
+        // 格式化发布时间
+        const publishTime = new Date(carpool.publishTime)
+        const now = new Date()
+        const diffMs = now - publishTime
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+        const diffDays = Math.floor(diffHours / 24)
+        
+        let publishTimeText = ''
+        if (diffDays > 0) {
+          publishTimeText = `${diffDays}天前`
+        } else if (diffHours > 0) {
+          publishTimeText = `${diffHours}小时前`
+        } else {
+          const diffMinutes = Math.floor(diffMs / (1000 * 60))
+          publishTimeText = diffMinutes > 0 ? `${diffMinutes}分钟前` : '刚刚'
+        }
+        
+        return {
+          _id: carpool._id,
+          activityName: carpool.activityName,
+          date: carpool.date,
+          time: carpool.time,
+          startLocation: carpool.location || carpool.startLocation || '起点',
+          endLocation: carpool.fullAddress || carpool.endLocation || '终点',
+          currentCount: participantsResult.total,
+          maxCount: carpool.maxCount,
+          price: carpool.price,
+          status: carpool.status,
+          publisherInfo: {
+            avatarUrl: organizerInfo.avatar || '/images/default-avatar.png',
+            nickName: organizerInfo.nickname
+          },
+          publishTimeText,
+          publishTime: carpool.publishTime
+        }
+      })
+    )
+    
     return {
       success: true,
-      data: result.data,
+      data: processedData,
       total: countResult.total,
       page,
       limit,

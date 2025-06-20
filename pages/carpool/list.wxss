@@ -1,6 +1,6 @@
 /* pages/carpool/list.wxss */
 .container {
-  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
   min-height: 100vh;
   padding-bottom: 120rpx;
 }
@@ -11,7 +11,7 @@
   margin: 30rpx 20rpx;
   border-radius: 25rpx;
   padding: 25rpx 30rpx;
-  box-shadow: 0 15rpx 35rpx rgba(255, 107, 157, 0.15), 0 8rpx 25rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 15rpx 35rpx rgba(255, 193, 204, 0.15), 0 8rpx 25rpx rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(10rpx);
   display: flex;
   align-items: center;
@@ -19,8 +19,8 @@
 
 .search-input {
   flex: 1;
-  background: rgba(255, 107, 157, 0.05);
-  border: 2rpx solid rgba(255, 107, 157, 0.1);
+  background: rgba(255, 193, 204, 0.05);
+  border: 2rpx solid rgba(255, 193, 204, 0.1);
   border-radius: 20rpx;
   padding: 20rpx 25rpx;
   font-size: 28rpx;
@@ -30,8 +30,8 @@
 }
 
 .search-input:focus {
-  border-color: rgba(255, 107, 157, 0.3);
-  background: rgba(255, 107, 157, 0.08);
+  border-color: rgba(255, 193, 204, 0.3);
+  background: rgba(255, 193, 204, 0.08);
 }
 
 .search-btn {
@@ -40,7 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  background: linear-gradient(135deg, #ffc1cc, #ffb3ba);
   border-radius: 50%;
   color: white;
   font-size: 28rpx;
@@ -70,8 +70,8 @@
 }
 
 .filter-item.active {
-  color: #ff6b9d;
-  border-bottom-color: #ff6b9d;
+  color: #ffc1cc;
+  border-bottom-color: #ffc1cc;
   font-weight: 500;
 }
 
@@ -117,8 +117,8 @@
 }
 
 .carpool-status.recruiting {
-  background: #fce4ec;
-  color: #e91e63;
+  background: #ffe4e7;
+  color: #ffc1cc;
 }
 
 .carpool-status.full {
@@ -157,7 +157,7 @@
 .price {
   font-size: 28rpx;
   font-weight: bold;
-  color: #ff6b9d;
+  color: #ffc1cc;
   margin-left: 20rpx;
 }
 
@@ -175,6 +175,8 @@
   height: 60rpx;
   border-radius: 50%;
   margin-right: 16rpx;
+  object-fit: cover;
+  object-position: center;
 }
 
 .publisher-name {
@@ -201,8 +203,8 @@
 }
 
 .join-btn {
-  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
+  color: #666;
   border: none;
   border-radius: 40rpx;
   padding: 16rpx 40rpx;
@@ -282,11 +284,11 @@
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(255, 154, 158, 0.4);
+  box-shadow: 0 8rpx 24rpx rgba(255, 193, 204, 0.4);
   transition: transform 0.2s;
 }
 

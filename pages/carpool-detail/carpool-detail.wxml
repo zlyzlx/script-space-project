@@ -52,7 +52,7 @@
         <button class="contact-btn" bindtap="contactOrganizer">联系TA</button>
       </view>
       <view class="organizer-info">
-        <image class="organizer-avatar" src="{{carpoolDetail.organizer.avatar}}" mode="aspectFill"></image>
+        <image class="organizer-avatar" src="{{carpoolDetail.organizer.avatar}}" mode="scaleToFill"></image>
         <view class="organizer-details">
           <view class="organizer-name">{{carpoolDetail.organizer.nickname}}</view>
           <view class="publish-time">发布于 {{carpoolDetail.publishTime}}</view>
@@ -65,7 +65,7 @@
       <view class="section-title">参与者 ({{carpoolDetail.participants.length}}人)</view>
       <view class="participants-list">
         <view class="participant" wx:for="{{carpoolDetail.participants}}" wx:key="id">
-          <image class="participant-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+          <image class="participant-avatar" src="{{item.avatar}}" mode="scaleToFill"></image>
           <view class="participant-name">{{item.nickname}}</view>
           <view class="join-time">{{item.joinTime}}</view>
         </view>
@@ -122,7 +122,7 @@
       
       <view class="qr-body">
         <view class="qr-user-info">
-          <image class="qr-avatar" src="{{carpoolDetail.organizer.avatar}}" mode="aspectFill"></image>
+          <image class="qr-avatar" src="{{carpoolDetail.organizer.avatar}}" mode="scaleToFill"></image>
           <view class="qr-name">{{carpoolDetail.organizer.nickname}}</view>
           <view class="qr-tip">扫描二维码，添加组织者为好友</view>
         </view>

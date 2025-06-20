@@ -2,7 +2,7 @@
 <view class="container">
   <form class="publish-form">
     <!-- 基本信息 -->
-    <view class="form-section">
+    <view class="form-container">
       <view class="section-title">基本信息</view>
       
       <view class="form-item">
@@ -62,7 +62,7 @@
     </view>
 
     <!-- 拼车设置 -->
-    <view class="form-section">
+    <view class="form-container">
       <view class="section-title">拼车设置</view>
       
       <view class="form-item">
@@ -96,7 +96,7 @@
     </view>
 
     <!-- 详细信息 -->
-    <view class="form-section">
+    <view class="form-container">
       <view class="section-title">详细信息</view>
       
       <view class="form-item">

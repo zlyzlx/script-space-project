@@ -1,7 +1,7 @@
 /* pages/index/index.wxss */
 /**index.wxss**/
 .container {
-  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
   min-height: 100vh;
   padding: 30rpx 20rpx;
 }
@@ -12,22 +12,22 @@
   border-radius: 25rpx;
   padding: 40rpx 30rpx;
   margin-bottom: 30rpx;
-  box-shadow: 0 20rpx 60rpx rgba(255, 107, 157, 0.15), 0 8rpx 30rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20rpx 60rpx rgba(255, 193, 204, 0.15), 0 8rpx 30rpx rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(10rpx);
 }
 
 .hero-title {
   font-size: 48rpx;
   font-weight: bold;
-  color: #ff6b9d;
+  color: #ffc1cc;
   text-align: center;
   margin-bottom: 20rpx;
-  text-shadow: 0 2rpx 4rpx rgba(255, 107, 157, 0.1);
+  text-shadow: 0 2rpx 4rpx rgba(255, 193, 204, 0.1);
 }
 
 .hero-subtitle {
   font-size: 28rpx;
-  color: #c44569;
+  color: #ffb3ba;
   text-align: center;
   opacity: 0.8;
   line-height: 1.6;
@@ -35,12 +35,12 @@
 
 /* 用户信息栏 */
 .user-bar {
-  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
   padding: 40rpx 30rpx 30rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #ffffff;
+  color: #666;
 }
 
 .user-info {
@@ -54,6 +54,8 @@
   border-radius: 50%;
   margin-right: 20rpx;
   border: 3rpx solid rgba(255, 255, 255, 0.3);
+  object-fit: cover;
+  object-position: center;
 }
 
 .user-details {
@@ -106,15 +108,15 @@
 }
 
 .publish-icon {
-  background: linear-gradient(135deg, #ff6b9d 0%, #f48fb1 100%);
+  background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
 }
 
 .search-icon {
-  background: linear-gradient(135deg, #ff8a80 0%, #ffcdd2 100%);
+  background: linear-gradient(135deg, #ffb3ba 0%, #ffc1cc 100%);
 }
 
 .profile-icon {
-  background: linear-gradient(135deg, #ffab91 0%, #ff8a65 100%);
+  background: linear-gradient(135deg, #ffc1cc 0%, #ff9aa2 100%);
 }
 
 .action-text {

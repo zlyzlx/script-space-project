@@ -48,7 +48,7 @@
 
       <view class="carpool-footer">
         <view class="organizer">
-          <image class="avatar" src="{{item.organizer.avatar}}" mode="aspectFill" />
+          <image class="avatar" src="{{item.organizer.avatar}}" mode="scaleToFill" />
           <text class="nickname">{{item.organizer.nickname}}</text>
         </view>
         <view class="publish-time">{{item.publishTime}}</view>
