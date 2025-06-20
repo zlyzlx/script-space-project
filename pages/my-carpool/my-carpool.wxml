@@ -1,0 +1,75 @@
+<!--my-carpool.wxml-->
+<view class="container">
+  <!-- 状态筛选 -->
+  <view class="status-filter">
+    <view class="filter-item {{activeStatus === 'all' ? 'active' : ''}}" bindtap="switchStatus" data-status="all">
+      全部
+    </view>
+    <view class="filter-item {{activeStatus === 'recruiting' ? 'active' : ''}}" bindtap="switchStatus" data-status="recruiting">
+      招募中
+    </view>
+    <view class="filter-item {{activeStatus === 'full' ? 'active' : ''}}" bindtap="switchStatus" data-status="full">
+      已满员
+    </view>
+    <view class="filter-item {{activeStatus === 'finished' ? 'active' : ''}}" bindtap="switchStatus" data-status="finished">
+      已结束
+    </view>
+  </view>
+
+  <!-- 我发布的拼车列表 -->
+  <view class="carpool-list">
+    <view class="carpool-item" wx:for="{{myCarpoolList}}" wx:key="id">
+      <view class="carpool-header">
+        <view class="activity-name">{{item.activityName}}</view>
+        <view class="status {{item.status === '招募中' ? 'recruiting' : (item.status === '已满员' ? 'full' : 'finished')}}">
+          {{item.status}}
+        </view>
+      </view>
+      
+      <view class="carpool-info">
+        <view class="info-row">
+          <text class="label">时间:</text>
+          <text class="value">{{item.date}} {{item.time}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">地点:</text>
+          <text class="value">{{item.location}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">人数:</text>
+          <text class="value">{{item.currentCount}}/{{item.maxCount}}人</text>
+        </view>
+        <view class="info-row">
+          <text class="label">费用:</text>
+          <text class="value price">¥{{item.price}}/人</text>
+        </view>
+      </view>
+
+      <!-- 参与者列表 -->
+      <view class="participants" wx:if="{{item.participants && item.participants.length > 0}}">
+        <text class="participants-title">参与者:</text>
+        <view class="participants-list">
+          <view class="participant" wx:for="{{item.participants}}" wx:key="id" wx:for-item="participant">
+            <image class="participant-avatar" src="{{participant.avatar}}" mode="aspectFill" />
+            <text class="participant-name">{{participant.nickname}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="carpool-actions">
+        <button class="action-btn view-btn" bindtap="viewDetail" data-id="{{item.id}}">查看详情</button>
+        <button class="action-btn edit-btn" wx:if="{{item.status === '招募中'}}" bindtap="editCarpool" data-id="{{item.id}}">编辑</button>
+        <button class="action-btn cancel-btn" wx:if="{{item.status !== '已结束'}}" bindtap="cancelCarpool" data-id="{{item.id}}">取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{myCarpoolList.length === 0}}">
+    <image class="empty-icon" src="/images/empty-carpool.png" mode="aspectFit" />
+    <text class="empty-text">还没有发布过拼车信息</text>
+    <text class="empty-desc">快去发布第一个拼车信息吧！</text>
+    <button class="publish-btn" bindtap="goToPublish">发布拼车</button>
+  </view>
+</view> 

@@ -1,0 +1,163 @@
+<!--profile.wxml-->
+<view class="container">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 未登录状态 -->
+  <view wx:if="{{!hasUserInfo && !loading}}" class="login-section">
+    <view class="login-card">
+      <view class="login-title">欢迎使用拼车小程序</view>
+      <view class="login-desc">登录后可以发布和参与拼车</view>
+      <view class="nickname-section">
+        <input 
+          class="nickname-input"
+          value="{{tempNickname}}"
+          placeholder="请输入昵称"
+          bindinput="onNicknameInput"
+          maxlength="20"
+        />
+      </view>
+      <view class="login-actions">
+        <button class="qr-btn" bindtap="showMyQRCode">
+          📱 我的二维码
+        </button>
+        <button class="login-btn" bindtap="getUserProfile">
+          微信登录
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view wx:if="{{hasUserInfo && !loading}}">
+    <!-- 个人信息卡片 -->
+    <view class="user-card">
+      <view class="user-info">
+        <button 
+          class="avatar-btn" 
+          open-type="chooseAvatar" 
+          bind:chooseavatar="chooseAvatar"
+        >
+          <image class="user-avatar" src="{{getUserAvatarUrl()}}" mode="aspectFill"></image>
+          <view class="avatar-edit">📷</view>
+        </button>
+        
+        <view class="user-details">
+          <input 
+            wx:if="{{canIUseNicknameComp}}"
+            type="nickname"
+            class="user-name-input"
+            value="{{getUserNickname()}}"
+            placeholder="请输入昵称"
+            bindinput="onNicknameInput"
+            bindblur="onNicknameBlur"
+          />
+          <view wx:else class="user-name">{{getUserNickname()}}</view>
+          
+          <view class="user-actions">
+            <button class="qr-btn" bindtap="showMyQRCode">
+              📱 我的二维码
+            </button>
+            <button class="logout-btn" bindtap="logout">
+              退出登录
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 统计数据 -->
+    <view class="stats-card">
+      <view class="stats-header">
+        <view class="stats-title">我的统计</view>
+        <button class="refresh-btn" bindtap="refreshStats">🔄 刷新</button>
+      </view>
+      
+      <view class="stats-grid">
+        <view class="stat-item" bindtap="viewMyCarpool">
+          <view class="stat-number">{{myCarpoolCount}}</view>
+          <view class="stat-label">发布的拼车</view>
+        </view>
+        <view class="stat-item" bindtap="viewMyRides">
+          <view class="stat-number">{{myRidesCount}}</view>
+          <view class="stat-label">参与的拼车</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-number">{{totalParticipants}}</view>
+          <view class="stat-label">服务人次</view>
+        </view>
+      </view>
+      
+      <view wx:if="{{lastUpdateTime}}" class="last-update">
+        最后更新：{{lastUpdateTime}}
+      </view>
+    </view>
+
+    <!-- 快捷操作 -->
+    <view class="quick-actions">
+      <view class="section-title">快捷操作</view>
+      <view class="actions-grid">
+        <view class="action-item" bindtap="publishCarpool">
+          <view class="action-icon publish">📝</view>
+          <view class="action-title">发布拼车</view>
+          <view class="action-desc">快速发布</view>
+        </view>
+        <view class="action-item" bindtap="searchCarpool">
+          <view class="action-icon search">🔍</view>
+          <view class="action-title">搜索拼车</view>
+          <view class="action-desc">找到合适的</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-section">
+      <view class="menu-item" bindtap="publishCarpool">
+        <view class="menu-icon">🚗</view>
+        <view class="menu-text">发布拼车</view>
+        <view class="menu-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="searchCarpool">
+        <view class="menu-icon">🔍</view>
+        <view class="menu-text">搜索拼车</view>
+        <view class="menu-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="goToSettings">
+        <view class="menu-icon">⚙️</view>
+        <view class="menu-text">设置</view>
+        <view class="menu-arrow">></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 二维码弹窗 -->
+  <view wx:if="{{showQRCode}}" class="qr-modal" bindtap="hideQRCode">
+    <view class="qr-content" catchtap="{{true}}">
+      <view class="qr-header">
+        <view class="qr-title">我的微信二维码</view>
+        <button class="close-btn" bindtap="hideQRCode">✕</button>
+      </view>
+      
+      <view class="qr-body">
+        <view class="qr-user-info">
+          <image class="qr-avatar" src="{{getUserAvatarUrl()}}" mode="aspectFill"></image>
+          <view class="qr-name">{{getUserNickname()}}</view>
+          <view class="qr-tip">扫描二维码，添加我为好友</view>
+        </view>
+        
+        <view class="qr-code-container">
+          <image wx:if="{{wechatQRCode}}" class="qr-code" src="{{wechatQRCode}}" mode="aspectFit"></image>
+          <view wx:else class="qr-loading">生成中...</view>
+        </view>
+        
+        <view class="qr-actions">
+          <button class="save-btn" bindtap="saveQRCodeToAlbum">保存到相册</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

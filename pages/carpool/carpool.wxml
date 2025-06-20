@@ -1,0 +1,65 @@
+<!--carpool.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索活动地点或场所" bindinput="onSearchInput" value="{{searchText}}" />
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-item {{dateFilter === '今天' ? 'active' : ''}}" bindtap="filterByDate" data-date="今天">今天</view>
+    <view class="filter-item {{dateFilter === '明天' ? 'active' : ''}}" bindtap="filterByDate" data-date="明天">明天</view>
+    <view class="filter-item {{dateFilter === '本周' ? 'active' : ''}}" bindtap="filterByDate" data-date="本周">本周</view>
+    <view class="filter-item {{statusFilter === '招募中' ? 'active' : ''}}" bindtap="filterByStatus" data-status="招募中">招募中</view>
+  </view>
+
+  <!-- 发布拼车按钮 -->
+  <view class="publish-btn-container">
+    <button class="publish-btn" bindtap="publishCarpool">发布拼车信息</button>
+  </view>
+
+  <!-- 拼车信息列表 -->
+  <view class="carpool-list">
+    <view class="carpool-item" wx:for="{{carpoolList}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}">
+      <view class="carpool-header">
+        <view class="activity-name">{{item.activityName}}</view>
+        <view class="status {{item.status === '招募中' ? 'recruiting' : 'full'}}">{{item.status}}</view>
+      </view>
+      
+      <view class="carpool-info">
+        <view class="info-row">
+          <text class="label">时间:</text>
+          <text class="value">{{item.date}} {{item.time}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">地点:</text>
+          <text class="value">{{item.location}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">人数:</text>
+          <text class="value">{{item.currentCount}}/{{item.maxCount}}人</text>
+        </view>
+        <view class="info-row">
+          <text class="label">费用:</text>
+          <text class="value price">¥{{item.price}}/人</text>
+        </view>
+      </view>
+
+      <view class="carpool-footer">
+        <view class="organizer">
+          <image class="avatar" src="{{item.organizer.avatar}}" mode="aspectFill" />
+          <text class="nickname">{{item.organizer.nickname}}</text>
+        </view>
+        <view class="publish-time">{{item.publishTime}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{carpoolList.length === 0}}">
+    <image class="empty-icon" src="/images/empty.png" mode="aspectFit" />
+    <text class="empty-text">暂无拼车信息</text>
+    <text class="empty-desc">快来发布第一个拼车信息吧！</text>
+  </view>
+</view> 

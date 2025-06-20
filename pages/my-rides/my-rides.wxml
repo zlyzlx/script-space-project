@@ -1,0 +1,72 @@
+<!--my-rides.wxml-->
+<view class="container">
+  <!-- 状态筛选 -->
+  <view class="status-filter">
+    <view class="filter-item {{activeStatus === 'all' ? 'active' : ''}}" bindtap="switchStatus" data-status="all">
+      全部
+    </view>
+    <view class="filter-item {{activeStatus === 'upcoming' ? 'active' : ''}}" bindtap="switchStatus" data-status="upcoming">
+      即将开始
+    </view>
+    <view class="filter-item {{activeStatus === 'finished' ? 'active' : ''}}" bindtap="switchStatus" data-status="finished">
+      已完成
+    </view>
+  </view>
+
+  <!-- 我参与的车次列表 -->
+  <view class="rides-list">
+    <view class="ride-item" wx:for="{{myRidesList}}" wx:key="id">
+      <view class="ride-header">
+        <view class="activity-name">{{item.activityName}}</view>
+        <view class="ride-status {{item.status === '即将开始' ? 'upcoming' : 'finished'}}">
+          {{item.status}}
+        </view>
+      </view>
+      
+      <view class="ride-info">
+        <view class="info-row">
+          <text class="label">时间:</text>
+          <text class="value">{{item.date}} {{item.time}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">地点:</text>
+          <text class="value">{{item.location}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">费用:</text>
+          <text class="value price">¥{{item.price}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">组织者:</text>
+          <text class="value">{{item.organizer}}</text>
+        </view>
+      </view>
+
+      <!-- 其他参与者 -->
+      <view class="other-participants" wx:if="{{item.otherParticipants && item.otherParticipants.length > 0}}">
+        <text class="participants-title">同行小伙伴:</text>
+        <view class="participants-list">
+          <view class="participant" wx:for="{{item.otherParticipants}}" wx:key="id" wx:for-item="participant">
+            <image class="participant-avatar" src="{{participant.avatar}}" mode="aspectFill" />
+            <text class="participant-name">{{participant.nickname}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="ride-actions">
+        <button class="action-btn contact-btn" bindtap="contactOrganizer" data-id="{{item.id}}">联系组织者</button>
+        <button class="action-btn quit-btn" wx:if="{{item.status === '即将开始'}}" bindtap="quitRide" data-id="{{item.id}}">退出拼车</button>
+        <button class="action-btn rate-btn" wx:if="{{item.status === '已完成' && !item.hasRated}}" bindtap="rateRide" data-id="{{item.id}}">评价</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{myRidesList.length === 0}}">
+    <image class="empty-icon" src="/images/empty-rides.png" mode="aspectFit" />
+    <text class="empty-text">还没有参与过拼车</text>
+    <text class="empty-desc">快去加入一个拼车吧！</text>
+    <button class="browse-btn" bindtap="goToBrowse">浏览拼车</button>
+  </view>
+</view> 

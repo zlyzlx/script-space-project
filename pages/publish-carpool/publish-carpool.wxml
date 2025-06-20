@@ -1,0 +1,155 @@
+<!--pages/publish-carpool/publish-carpool.wxml-->
+<view class="container">
+  <form class="publish-form">
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">基本信息</view>
+      
+      <view class="form-item">
+        <view class="item-label required">活动名称</view>
+        <input 
+          class="item-input"
+          placeholder="请输入剧本杀活动名称"
+          value="{{formData.activityName}}"
+          data-field="activityName"
+          bindinput="onFormChange"
+          maxlength="50"
+        />
+      </view>
+
+      <view class="form-item">
+        <view class="item-label required">活动日期</view>
+        <picker 
+          mode="date"
+          value="{{formData.date}}"
+          start="{{minDate}}"
+          end="{{maxDate}}"
+          bindchange="onDateChange"
+        >
+          <view class="picker-display {{formData.date ? '' : 'placeholder'}}">
+            {{formData.date || '请选择活动日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <view class="item-label required">活动时间</view>
+        <picker 
+          mode="time"
+          value="{{formData.time}}"
+          start="{{timeRange[0]}}"
+          end="{{timeRange[1]}}"
+          bindchange="onTimeChange"
+        >
+          <view class="picker-display {{formData.time ? '' : 'placeholder'}}">
+            {{formData.time || '请选择活动时间'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <view class="item-label required">活动地点</view>
+        <view class="location-input" bindtap="selectLocation">
+          <view class="location-text {{formData.location ? '' : 'placeholder'}}">
+            {{formData.location || '点击选择活动地点'}}
+          </view>
+          <view class="location-icon">📍</view>
+        </view>
+        <view wx:if="{{formData.fullAddress}}" class="location-detail">
+          {{formData.fullAddress}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 拼车设置 -->
+    <view class="form-section">
+      <view class="section-title">拼车设置</view>
+      
+      <view class="form-item">
+        <view class="item-label required">最大人数</view>
+        <picker 
+          mode="selector"
+          range="{{[2,3,4,5,6,7,8,9,10]}}"
+          value="{{formData.maxCount - 2}}"
+          bindchange="onCountChange"
+        >
+          <view class="picker-display">
+            {{formData.maxCount}}人
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <view class="item-label required">拼车费用</view>
+        <view class="price-input">
+          <input 
+            class="item-input"
+            placeholder="请输入每人费用"
+            value="{{formData.price}}"
+            data-field="price"
+            bindinput="onFormChange"
+            type="digit"
+          />
+          <text class="price-unit">元/人</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 详细信息 -->
+    <view class="form-section">
+      <view class="section-title">详细信息</view>
+      
+      <view class="form-item">
+        <view class="item-label">活动描述</view>
+        <textarea 
+          class="item-textarea"
+          placeholder="请描述这个剧本杀活动的特色、故事背景等"
+          value="{{formData.description}}"
+          data-field="description"
+          bindinput="onFormChange"
+          maxlength="200"
+          show-confirm-bar="{{false}}"
+        />
+      </view>
+
+      <view class="form-item">
+        <view class="item-label">参与要求</view>
+        <textarea 
+          class="item-textarea"
+          placeholder="对参与者的要求，如新手友好、需要经验等"
+          value="{{formData.requirements}}"
+          data-field="requirements"
+          bindinput="onFormChange"
+          maxlength="100"
+          show-confirm-bar="{{false}}"
+        />
+      </view>
+
+      <view class="form-item">
+        <view class="item-label">注意事项</view>
+        <textarea 
+          class="item-textarea"
+          placeholder="其他需要参与者注意的事项"
+          value="{{formData.notes}}"
+          data-field="notes"
+          bindinput="onFormChange"
+          maxlength="100"
+          show-confirm-bar="{{false}}"
+        />
+      </view>
+    </view>
+  </form>
+
+  <!-- 底部操作按钮 -->
+  <view class="action-buttons">
+    <button class="cancel-btn" bindtap="onCancel">取消</button>
+    <button class="reset-btn" bindtap="onReset">重置</button>
+    <button 
+      class="submit-btn {{isSubmitting ? 'submitting' : ''}}" 
+      bindtap="onSubmit"
+      disabled="{{isSubmitting}}"
+    >
+      {{isSubmitting ? '提交中...' : (mode === 'edit' ? '更新' : '发布')}}
+    </button>
+  </view>
+</view> 

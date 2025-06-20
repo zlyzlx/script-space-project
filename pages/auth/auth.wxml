@@ -1,0 +1,92 @@
+<!--pages/auth/auth.wxml-->
+<view class="auth-container">
+  <!-- 顶部装饰 -->
+  <view class="auth-header">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <view class="title">剧本杀拼车</view>
+    <view class="subtitle">找到你的推理伙伴</view>
+  </view>
+
+  <view class="auth-content">
+    <!-- 未登录状态 -->
+    <view wx:if="{{!hasUserInfo}}" class="login-section">
+      
+      <!-- 微信授权登录 -->
+      <view class="auth-methods">
+        <button 
+          wx:if="{{canIUseGetUserProfile}}"
+          class="auth-btn primary" 
+          bindtap="getUserProfile"
+          loading="{{loading}}"
+        >
+          <text class="btn-icon">👤</text>
+          <text>微信授权登录</text>
+        </button>
+
+        <!-- 兼容旧版本 -->
+        <button 
+          wx:else
+          class="auth-btn primary" 
+          open-type="getUserInfo" 
+          bindgetuserinfo="getUserInfo"
+          loading="{{loading}}"
+        >
+          <text class="btn-icon">👤</text>
+          <text>微信授权登录</text>
+        </button>
+      </view>
+
+      <!-- 登录说明 -->
+      <view class="auth-tips">
+        <view class="tip-item">
+          <text class="tip-icon">🔒</text>
+          <text>我们承诺保护您的隐私信息</text>
+        </view>
+        <view class="tip-item">
+          <text class="tip-icon">✨</text>
+          <text>登录后可发布和参与拼车活动</text>
+        </view>
+        <view class="tip-item">
+          <text class="tip-icon">🚗</text>
+          <text>与剧本杀爱好者一起出行</text>
+        </view>
+      </view>
+
+      <!-- 必须登录提示 -->
+      <view class="required-login-tip">
+        <text class="tip-text">⚠️ 需要微信授权才能使用拼车功能</text>
+      </view>
+    </view>
+
+    <!-- 已登录状态 -->
+    <view wx:else class="logged-section">
+      <view class="user-preview">
+        <button 
+          class="avatar-wrapper" 
+          open-type="chooseAvatar" 
+          bind:chooseavatar="onChooseAvatar"
+        >
+          <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+          <view class="avatar-edit">✏️</view>
+        </button>
+        
+        <view class="user-name">{{userInfo.nickName}}</view>
+        <view class="welcome-text">欢迎加入剧本杀拼车！</view>
+      </view>
+
+      <view class="login-actions">
+        <button class="complete-btn" bindtap="completeLogin">
+          开始使用
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部说明 -->
+  <view class="auth-footer">
+    <text class="footer-text">登录即表示同意</text>
+    <text class="footer-link">《用户协议》</text>
+    <text class="footer-text">和</text>
+    <text class="footer-link">《隐私政策》</text>
+  </view>
+</view> 

@@ -1,0 +1,389 @@
+/* pages/my-carpools/my-carpools.wxss */
+.container {
+  padding: 20rpx;
+  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+/* 页面头部 */
+.page-header {
+  text-align: center;
+  padding: 40rpx 0;
+  color: white;
+}
+
+.header-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.header-subtitle {
+  font-size: 28rpx;
+  opacity: 0.8;
+}
+
+/* 筛选标签 */
+.filter-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50rpx;
+  padding: 8rpx;
+  margin-bottom: 30rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  border-radius: 40rpx;
+  color: white;
+  font-size: 28rpx;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active {
+  background: white;
+  color: #ff6b9d;
+  font-weight: bold;
+}
+
+/* 统计栏 */
+.stats-container {
+  display: flex;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  color: white;
+}
+
+.stat-number {
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+.stat-divider {
+  width: 2rpx;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 20rpx;
+}
+
+/* 拼车列表 */
+.carpool-list {
+  margin-bottom: 120rpx;
+}
+
+.carpool-item {
+  margin-bottom: 30rpx;
+}
+
+.carpool-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.carpool-card:active {
+  transform: translateY(2rpx);
+}
+
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.activity-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.status-badge {
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.status-badge.recruiting {
+  background: #e8f5e8;
+  color: #52c41a;
+}
+
+.status-badge.full {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.status-badge.finished {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.status-badge.cancelled {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+/* 卡片内容 */
+.card-content {
+  margin-bottom: 20rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  width: 40rpx;
+  margin-right: 15rpx;
+  text-align: center;
+}
+
+.info-text {
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+/* 操作按钮 */
+.card-actions {
+  display: flex;
+  gap: 15rpx;
+  margin-bottom: 20rpx;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 15rpx 0;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: white;
+}
+
+.action-btn.secondary {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.action-btn.danger {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+/* 发布时间 */
+.publish-time {
+  font-size: 24rpx;
+  color: #999;
+  text-align: right;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+  color: white;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  border-top: 4rpx solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20rpx;
+}
+
+.loading-spinner.small {
+  width: 40rpx;
+  height: 40rpx;
+  border-width: 3rpx;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  opacity: 0.8;
+}
+
+/* 空状态 */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+  color: white;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.8;
+}
+
+.empty-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 15rpx;
+}
+
+.empty-subtitle {
+  font-size: 28rpx;
+  opacity: 0.8;
+  margin-bottom: 40rpx;
+}
+
+.publish-btn {
+  background: white;
+  color: #ff6b9d;
+  border-radius: 50rpx;
+  padding: 25rpx 50rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  border: none;
+}
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 30rpx 0;
+}
+
+.loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 28rpx;
+}
+
+.loading-more .loading-spinner {
+  margin-right: 15rpx;
+  margin-bottom: 0;
+}
+
+.load-more-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 20rpx 40rpx;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+.no-more {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 26rpx;
+  padding: 30rpx 0;
+}
+
+/* 悬浮按钮 */
+.fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 40rpx;
+  width: 120rpx;
+  height: 120rpx;
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.4);
+  z-index: 100;
+  transition: transform 0.2s ease;
+}
+
+.fab:active {
+  transform: scale(0.9);
+}
+
+.fab-icon {
+  color: white;
+  font-size: 60rpx;
+  font-weight: bold;
+}
+
+/* 动画 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.filter-item.active {
+  color: #ff6b9d;
+  border-bottom-color: #ff6b9d;
+  font-weight: 500;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 12rpx 30rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  margin-right: 15rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 157, 0.3);
+}
+
+.price {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #ff6b9d;
+  margin-left: auto;
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 12rpx 25rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 157, 0.3);
+} 

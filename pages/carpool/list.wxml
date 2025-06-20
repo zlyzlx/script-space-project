@@ -1,0 +1,126 @@
+<!--pages/carpool/list.wxml-->
+<view class="list-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input 
+      class="search-input" 
+      placeholder="搜索拼车活动..." 
+      bindinput="onSearchInput"
+      bindconfirm="onSearch"
+      value="{{searchKeyword}}"
+    />
+    <view class="search-btn" bindtap="onSearch">��</view>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view 
+      class="filter-item {{filterStatus === 'all' ? 'active' : ''}}"
+      data-status="all"
+      bindtap="onFilterChange"
+    >
+      全部
+    </view>
+    <view 
+      class="filter-item {{filterStatus === '招募中' ? 'active' : ''}}"
+      data-status="招募中"
+      bindtap="onFilterChange"
+    >
+      招募中
+    </view>
+    <view 
+      class="filter-item {{filterStatus === '已满员' ? 'active' : ''}}"
+      data-status="已满员"
+      bindtap="onFilterChange"
+    >
+      已满员
+    </view>
+  </view>
+
+  <!-- 拼车列表 -->
+  <view class="carpool-list">
+    <view wx:if="{{loading && carpools.length === 0}}" class="loading-container">
+      <view class="loading-text">加载中...</view>
+    </view>
+
+    <view wx:elif="{{carpools.length === 0}}" class="empty-container">
+      <view class="empty-icon">🚗</view>
+      <view class="empty-text">暂无拼车信息</view>
+      <view class="empty-desc">快来发布第一个拼车吧！</view>
+    </view>
+
+    <view wx:else>
+      <view 
+        wx:for="{{carpools}}" 
+        wx:key="_id" 
+        class="carpool-item"
+        data-id="{{item._id}}"
+        bindtap="viewDetail"
+      >
+        <!-- 拼车头部 -->
+        <view class="carpool-header">
+          <view class="activity-name">{{item.activityName}}</view>
+          <view class="carpool-status {{item.status === '招募中' ? 'recruiting' : 'full'}}">
+            {{item.status}}
+          </view>
+        </view>
+
+        <!-- 拼车信息 -->
+        <view class="carpool-info">
+          <view class="info-row">
+            <text class="info-icon">📅</text>
+            <text class="info-text">{{item.date}} {{item.time}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-icon">📍</text>
+            <text class="info-text">{{item.startLocation}} → {{item.endLocation}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-icon">👥</text>
+            <text class="info-text">{{item.currentCount}}/{{item.maxCount}}人</text>
+            <text class="price">¥{{item.price}}/人</text>
+          </view>
+        </view>
+
+        <!-- 发布者信息 -->
+        <view class="publisher-info">
+          <image class="publisher-avatar" src="{{item.publisherInfo.avatarUrl}}" mode="aspectFill"></image>
+          <view class="publisher-name">{{item.publisherInfo.nickName}}</view>
+          <view class="publish-time">{{item.publishTimeText}}</view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="carpool-actions" catchtap="stopPropagation">
+          <view wx:if="{{item.status === '招募中'}}" class="action-buttons">
+            <button 
+              class="join-btn"
+              data-id="{{item._id}}"
+              bindtap="joinCarpool"
+            >
+              立即加入
+            </button>
+          </view>
+          <view wx:else class="full-tip">
+            已满员
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{loading && carpools.length > 0}}" class="load-more">
+      <view class="loading-text">加载更多...</view>
+    </view>
+
+    <view wx:if="{{!hasMore && carpools.length > 0}}" class="no-more">
+      没有更多了
+    </view>
+  </view>
+
+  <!-- 发布按钮 -->
+  <view class="fab-container">
+    <navigator url="/pages/publish-carpool/publish-carpool" class="fab-btn">
+      <text class="fab-icon">+</text>
+    </navigator>
+  </view>
+</view>

@@ -1,0 +1,141 @@
+<!--pages/carpool-detail/carpool-detail.wxml-->
+<view class="container">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 拼车详情 -->
+  <view wx:else class="carpool-detail">
+    <!-- 活动信息卡片 -->
+    <view class="detail-card">
+      <view class="card-header">
+        <view class="activity-name">{{carpoolDetail.activityName}}</view>
+        <view class="status {{carpoolDetail.status === '招募中' ? 'recruiting' : 'full'}}">
+          {{carpoolDetail.status}}
+        </view>
+      </view>
+
+      <view class="activity-info">
+        <view class="info-row">
+          <view class="info-icon">📅</view>
+          <view class="info-label">时间：</view>
+          <view class="info-value">{{carpoolDetail.date}} {{carpoolDetail.time}}</view>
+        </view>
+        <view class="info-row" bindtap="showLocation">
+          <view class="info-icon">📍</view>
+          <view class="info-label">地点：</view>
+          <view class="info-value location">{{carpoolDetail.location}}</view>
+        </view>
+        <view class="info-row">
+          <view class="info-icon">👥</view>
+          <view class="info-label">人数：</view>
+          <view class="info-value">{{carpoolDetail.currentCount}}/{{carpoolDetail.maxCount}}人</view>
+        </view>
+        <view class="info-row">
+          <view class="info-icon">💰</view>
+          <view class="info-label">费用：</view>
+          <view class="info-value price">¥{{carpoolDetail.price}}/人</view>
+        </view>
+      </view>
+
+      <view wx:if="{{carpoolDetail.description}}" class="description">
+        <view class="desc-title">活动描述</view>
+        <view class="desc-content">{{carpoolDetail.description}}</view>
+      </view>
+    </view>
+
+    <!-- 组织者信息 -->
+    <view class="detail-card">
+      <view class="organizer-header">
+        <view class="section-title">组织者</view>
+        <button class="contact-btn" bindtap="contactOrganizer">联系TA</button>
+      </view>
+      <view class="organizer-info">
+        <image class="organizer-avatar" src="{{carpoolDetail.organizer.avatar}}" mode="aspectFill"></image>
+        <view class="organizer-details">
+          <view class="organizer-name">{{carpoolDetail.organizer.nickname}}</view>
+          <view class="publish-time">发布于 {{carpoolDetail.publishTime}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 参与者列表 -->
+    <view class="detail-card">
+      <view class="section-title">参与者 ({{carpoolDetail.participants.length}}人)</view>
+      <view class="participants-list">
+        <view class="participant" wx:for="{{carpoolDetail.participants}}" wx:key="id">
+          <image class="participant-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+          <view class="participant-name">{{item.nickname}}</view>
+          <view class="join-time">{{item.joinTime}}</view>
+        </view>
+        <!-- 空位展示 -->
+        <view wx:for="{{carpoolDetail.maxCount - carpoolDetail.participants.length}}" wx:key="*this" class="participant empty-slot">
+          <view class="empty-avatar">?</view>
+          <view class="empty-text">等待中</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 注意事项 -->
+    <view wx:if="{{carpoolDetail.notes}}" class="detail-card">
+      <view class="section-title">注意事项</view>
+      <view class="notes-content">{{carpoolDetail.notes}}</view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <!-- 普通用户操作 -->
+      <view wx:if="{{!isOrganizer}}" class="user-actions">
+        <button wx:if="{{!isParticipant && carpoolDetail.status === '招募中'}}" 
+                class="join-btn" 
+                bindtap="joinCarpool">
+          立即参与
+        </button>
+        <button wx:elif="{{isParticipant}}" 
+                class="quit-btn" 
+                bindtap="quitCarpool">
+          退出拼车
+        </button>
+        <button wx:else 
+                class="disabled-btn" 
+                disabled>
+          {{carpoolDetail.status}}
+        </button>
+      </view>
+
+      <!-- 组织者操作 -->
+      <view wx:else class="organizer-actions">
+        <button class="edit-btn">编辑信息</button>
+        <button class="cancel-btn">取消拼车</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 组织者微信二维码弹窗 -->
+  <view wx:if="{{showOrganizerQR}}" class="qr-modal" bindtap="hideOrganizerQR">
+    <view class="qr-content" catchtap="{{true}}">
+      <view class="qr-header">
+        <view class="qr-title">组织者微信二维码</view>
+        <button class="close-btn" bindtap="hideOrganizerQR">✕</button>
+      </view>
+      
+      <view class="qr-body">
+        <view class="qr-user-info">
+          <image class="qr-avatar" src="{{carpoolDetail.organizer.avatar}}" mode="aspectFill"></image>
+          <view class="qr-name">{{carpoolDetail.organizer.nickname}}</view>
+          <view class="qr-tip">扫描二维码，添加组织者为好友</view>
+        </view>
+        
+        <view class="qr-code-container">
+          <image wx:if="{{organizerQRCode}}" class="qr-code" src="{{organizerQRCode}}" mode="aspectFit"></image>
+          <view wx:else class="qr-loading">获取中...</view>
+        </view>
+        
+        <view class="qr-actions">
+          <button class="save-btn" bindtap="saveOrganizerQRToAlbum">保存到相册</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

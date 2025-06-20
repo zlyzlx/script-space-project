@@ -1,0 +1,9 @@
+{
+  "name": "get-user-qrcode",
+  "version": "1.0.0",
+  "description": "获取用户二维码",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+} 

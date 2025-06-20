@@ -1,0 +1,38 @@
+<view class="container">
+  <view class="friend-card" wx:if="{{friendInfo}}">
+    <view class="friend-header">
+      <image class="friend-avatar" src="{{friendInfo.avatarUrl}}" mode="aspectFill"></image>
+      <view class="friend-details">
+        <view class="friend-name">{{friendInfo.nickName}}</view>
+        <view class="friend-stats">
+          <text class="stat-item">发布拼车 {{friendInfo.carpoolCount || 0}} 次</text>
+          <text class="stat-item">参与拼车 {{friendInfo.ridesCount || 0}} 次</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="friend-actions">
+      <button class="contact-btn" bindtap="contactFriend">
+        💬 发送消息
+      </button>
+      <button class="view-carpools-btn" bindtap="viewFriendCarpools">
+        🚗 查看TA的拼车
+      </button>
+    </view>
+    
+    <view class="friend-tip">
+      <text>通过扫描二维码添加好友，可以更方便地联系和查看拼车信息</text>
+    </view>
+  </view>
+  
+  <view class="not-found" wx:else>
+    <view class="not-found-icon">😅</view>
+    <view class="not-found-text">未找到用户信息</view>
+    <view class="not-found-desc">可能是二维码已过期或用户不存在</view>
+    <button class="back-btn" bindtap="goBack">返回首页</button>
+  </view>
+  
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

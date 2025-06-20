@@ -1,0 +1,218 @@
+/**carpool.wxss**/
+.container {
+  padding: 0;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  padding: 20rpx;
+  background-color: white;
+  border-bottom: 1rpx solid #eee;
+}
+
+.search-input {
+  flex: 1;
+  height: 80rpx;
+  padding: 0 30rpx;
+  border: 1rpx solid #ddd;
+  border-radius: 40rpx;
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.search-btn {
+  width: 120rpx;
+  height: 80rpx;
+  margin-left: 20rpx;
+  background-color: #FF6B6B;
+  color: white;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  line-height: 80rpx;
+  padding: 0;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  padding: 20rpx 0;
+  background-color: white;
+  border-bottom: 1rpx solid #eee;
+  gap: 0;
+}
+
+.filter-item {
+  flex: 1;
+  padding: 16rpx 0;
+  border: 1rpx solid #ddd;
+  border-radius: 0;
+  font-size: 26rpx;
+  color: #666;
+  background-color: #f8f8f8;
+  text-align: center;
+  margin: 0;
+}
+
+.filter-item:first-child {
+  border-radius: 0;
+}
+
+.filter-item:last-child {
+  border-radius: 0;
+}
+
+.filter-item.active {
+  background-color: #FF6B6B;
+  color: white;
+  border-color: #FF6B6B;
+}
+
+/* 发布按钮 */
+.publish-btn-container {
+  padding: 20rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.publish-btn {
+  width: 90%;
+  height: 88rpx;
+  background-color: #FF6B6B;
+  color: white;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+/* 拼车列表 */
+.carpool-list {
+  padding: 0 20rpx;
+}
+
+.carpool-item {
+  background-color: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.carpool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.activity-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.status {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.status.recruiting {
+  background-color: #E8F5E8;
+  color: #4CAF50;
+}
+
+.status.full {
+  background-color: #FFF3E0;
+  color: #FF9800;
+}
+
+.carpool-info {
+  margin-bottom: 20rpx;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 12rpx;
+  align-items: center;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  width: 120rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.value {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.price {
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.carpool-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.organizer {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+}
+
+.nickname {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.publish-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 40rpx;
+}
+
+.empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 40rpx;
+  opacity: 0.3;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+}
+
+.empty-desc {
+  font-size: 28rpx;
+  color: #ccc;
+} 

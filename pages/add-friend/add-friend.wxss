@@ -1,0 +1,320 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  padding: 40rpx 30rpx;
+  box-sizing: border-box;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  color: white;
+}
+
+.loading-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #ffffff;
+  border-top: 6rpx solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 32rpx;
+  margin-top: 30rpx;
+  opacity: 0.8;
+}
+
+/* 错误信息 */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+}
+
+.error-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.error-message {
+  color: #ffffff;
+  font-size: 32rpx;
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+/* 用户信息 */
+.friend-info {
+  max-width: 680rpx;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.title {
+  color: #ffffff;
+  font-size: 44rpx;
+  font-weight: bold;
+}
+
+/* 好友信息卡片 */
+.friend-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 32rpx;
+  padding: 50rpx 40rpx;
+  backdrop-filter: blur(20rpx);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease;
+}
+
+.friend-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.friend-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  border: 6rpx solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.friend-details {
+  flex: 1;
+}
+
+.friend-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.friend-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.stat-item {
+  font-size: 24rpx;
+  color: #666;
+  background: rgba(255, 107, 157, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+  display: inline-block;
+  width: fit-content;
+}
+
+/* 联系方式 */
+.contact-section {
+  background: #ffffff;
+  border-radius: 32rpx;
+  padding: 40rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+  position: relative;
+}
+
+.contact-item:last-child {
+  border-bottom: none;
+}
+
+.contact-icon {
+  font-size: 48rpx;
+  margin-right: 30rpx;
+  width: 60rpx;
+  text-align: center;
+}
+
+.contact-info {
+  flex: 1;
+}
+
+.contact-label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 5rpx;
+}
+
+.contact-value {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.copy-hint,
+.call-hint {
+  font-size: 24rpx;
+  color: #ff6b9d;
+  background: #ffeef4;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.no-contact {
+  text-align: center;
+  padding: 60rpx 0;
+}
+
+.no-contact-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 操作按钮 */
+.friend-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.contact-btn, .view-carpools-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-btn {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: #ffffff;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.4);
+}
+
+.view-carpools-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #ffffff;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+}
+
+.contact-btn::after, .view-carpools-btn::after {
+  border: none;
+}
+
+/* 提示信息 */
+.friend-tip {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.6;
+  padding: 20rpx;
+  background: rgba(255, 107, 157, 0.05);
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(255, 107, 157, 0.1);
+}
+
+/* 未找到状态 */
+.not-found {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 32rpx;
+  padding: 80rpx 40rpx;
+  text-align: center;
+  backdrop-filter: blur(20rpx);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease;
+}
+
+.not-found-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.not-found-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.not-found-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 50rpx;
+  line-height: 1.5;
+}
+
+.back-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: #ffffff;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.4);
+}
+
+.back-btn::after {
+  border: none;
+}
+
+/* 动画效果 */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式适配 */
+@media screen and (max-width: 400px) {
+  .friend-actions {
+    flex-direction: column;
+  }
+  
+  .friend-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .friend-avatar {
+    margin-right: 0;
+    margin-bottom: 20rpx;
+  }
+} 

@@ -1,0 +1,242 @@
+/**publish-carpool.wxss**/
+.container {
+  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  min-height: 100vh;
+  padding: 30rpx 20rpx;
+}
+
+.publish-form {
+  margin-bottom: 120rpx;
+}
+
+.form-container {
+  background: white;
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 20rpx 60rpx rgba(255, 107, 157, 0.15), 0 8rpx 30rpx rgba(0, 0, 0, 0.08);
+  animation: slideUp 0.3s ease-out;
+}
+
+.section-title {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 30rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+}
+
+.form-item {
+  padding: 30rpx;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.item-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+  font-weight: 500;
+}
+
+.item-label.required::after {
+  content: '*';
+  color: #ff4d4f;
+  margin-left: 8rpx;
+}
+
+.item-input {
+  width: 100%;
+  padding: 20rpx;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.item-input:focus {
+  border-color: #ff6b9d;
+  background: white;
+  box-shadow: 0 0 0 4rpx rgba(255, 107, 157, 0.1);
+}
+
+.item-textarea {
+  width: 100%;
+  min-height: 120rpx;
+  padding: 20rpx;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+  resize: none;
+  transition: all 0.3s ease;
+}
+
+.item-textarea:focus {
+  border-color: #ff6b9d;
+  background: white;
+  box-shadow: 0 0 0 4rpx rgba(255, 107, 157, 0.1);
+}
+
+.picker-display {
+  padding: 20rpx;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.picker-display.placeholder {
+  color: #999;
+}
+
+.picker-display:active {
+  border-color: #ff6b9d;
+  background: white;
+}
+
+.location-input {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.location-input:active {
+  border-color: #ff6b9d;
+  background: white;
+}
+
+.location-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.location-text.placeholder {
+  color: #999;
+}
+
+.location-icon {
+  font-size: 32rpx;
+  margin-left: 15rpx;
+}
+
+.location-detail {
+  margin-top: 15rpx;
+  padding: 15rpx 20rpx;
+  background: #fce4ec;
+  border-radius: 10rpx;
+  font-size: 24rpx;
+  color: #666;
+  border-left: 4rpx solid #ff6b9d;
+}
+
+.price-input {
+  display: flex;
+  align-items: center;
+}
+
+.price-input .item-input {
+  flex: 1;
+  margin-right: 15rpx;
+}
+
+.price-unit {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.action-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 20rpx;
+  padding: 30rpx;
+  background: white;
+  box-shadow: 0 -10rpx 30rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.cancel-btn,
+.reset-btn,
+.submit-btn {
+  flex: 1;
+  padding: 25rpx 0;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.reset-btn {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: white;
+  box-shadow: 0 6rpx 20rpx rgba(255, 107, 157, 0.3);
+}
+
+.submit-btn.submitting {
+  background: #ccc;
+  box-shadow: none;
+}
+
+.cancel-btn:active,
+.reset-btn:active,
+.submit-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 400px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 15rpx;
+  }
+  
+  .cancel-btn,
+  .reset-btn,
+  .submit-btn {
+    flex: none;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 输入框占位符样式 */
+.item-input::placeholder,
+.item-textarea::placeholder {
+  color: #999;
+  font-size: 28rpx;
+} 

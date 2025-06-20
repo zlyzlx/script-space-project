@@ -1,0 +1,9 @@
+{
+  "name": "generate-wechat-qr",
+  "version": "1.0.0",
+  "description": "生成微信二维码",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+} 

@@ -1,0 +1,321 @@
+/* pages/carpool/list.wxss */
+.container {
+  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+/* 搜索栏 */
+.search-bar {
+  background: rgba(255, 255, 255, 0.95);
+  margin: 30rpx 20rpx;
+  border-radius: 25rpx;
+  padding: 25rpx 30rpx;
+  box-shadow: 0 15rpx 35rpx rgba(255, 107, 157, 0.15), 0 8rpx 25rpx rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10rpx);
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  background: rgba(255, 107, 157, 0.05);
+  border: 2rpx solid rgba(255, 107, 157, 0.1);
+  border-radius: 20rpx;
+  padding: 20rpx 25rpx;
+  font-size: 28rpx;
+  color: #333;
+  transition: all 0.3s ease;
+  margin-right: 20rpx;
+}
+
+.search-input:focus {
+  border-color: rgba(255, 107, 157, 0.3);
+  background: rgba(255, 107, 157, 0.08);
+}
+
+.search-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  border-radius: 50%;
+  color: white;
+  font-size: 28rpx;
+  transition: all 0.2s ease;
+}
+
+.search-btn:active {
+  transform: scale(0.9);
+}
+
+/* 筛选栏 */
+.filter-bar {
+  background: #ffffff;
+  display: flex;
+  padding: 0 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.filter-item {
+  flex: 1;
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  border-bottom: 4rpx solid transparent;
+  transition: all 0.3s;
+}
+
+.filter-item.active {
+  color: #ff6b9d;
+  border-bottom-color: #ff6b9d;
+  font-weight: 500;
+}
+
+/* 拼车列表 */
+.carpool-list {
+  padding: 20rpx 30rpx;
+}
+
+.carpool-item {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+}
+
+.carpool-item:active {
+  transform: scale(0.98);
+}
+
+/* 拼车头部 */
+.carpool-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.activity-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.carpool-status {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.carpool-status.recruiting {
+  background: #fce4ec;
+  color: #e91e63;
+}
+
+.carpool-status.full {
+  background: #fff2e8;
+  color: #fa8c16;
+}
+
+/* 拼车信息 */
+.carpool-info {
+  margin-bottom: 20rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  font-size: 28rpx;
+  margin-right: 12rpx;
+  width: 32rpx;
+  text-align: center;
+}
+
+.info-text {
+  flex: 1;
+}
+
+.price {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #ff6b9d;
+  margin-left: 20rpx;
+}
+
+/* 发布者信息 */
+.publisher-info {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-top: 1rpx solid #f0f0f0;
+  margin-bottom: 20rpx;
+}
+
+.publisher-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+}
+
+.publisher-name {
+  font-size: 26rpx;
+  color: #333;
+  margin-right: 20rpx;
+}
+
+.publish-time {
+  font-size: 22rpx;
+  color: #999;
+  margin-left: auto;
+}
+
+/* 操作按钮 */
+.carpool-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20rpx;
+}
+
+.join-btn {
+  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 40rpx;
+  padding: 16rpx 40rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.join-btn::after {
+  border: none;
+}
+
+.full-tip {
+  color: #999;
+  font-size: 24rpx;
+  padding: 16rpx 0;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400rpx;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.load-more {
+  text-align: center;
+  padding: 40rpx 0;
+  color: #999;
+  font-size: 26rpx;
+}
+
+.no-more {
+  text-align: center;
+  padding: 40rpx 0;
+  color: #ccc;
+  font-size: 24rpx;
+}
+
+/* 空状态 */
+.empty-container {
+  text-align: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 悬浮按钮 */
+.fab-container {
+  position: fixed;
+  bottom: 40rpx;
+  right: 40rpx;
+  z-index: 999;
+}
+
+.fab-btn {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(255, 154, 158, 0.4);
+  transition: transform 0.2s;
+}
+
+.fab-btn:active {
+  transform: scale(0.9);
+}
+
+.fab-icon {
+  font-size: 60rpx;
+  color: #ffffff;
+  font-weight: 300;
+}
+
+/* 响应式适配 */
+@media screen and (max-width: 375px) {
+  .carpool-item {
+    padding: 24rpx;
+  }
+  
+  .activity-name {
+    font-size: 28rpx;
+  }
+  
+  .fab-btn {
+    width: 100rpx;
+    height: 100rpx;
+  }
+  
+  .fab-icon {
+    font-size: 50rpx;
+  }
+}

@@ -1,0 +1,126 @@
+<!--pages/index/index.wxml-->
+<view class="index-container">
+  <!-- 用户信息栏 -->
+  <view class="user-bar" bindtap="goToProfile">
+    <view class="user-info">
+      <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      <view class="user-details">
+        <view class="user-name">{{userInfo.nickName || '未登录'}}</view>
+        <view class="user-status">{{userInfo.isGuest ? '游客模式' : '欢迎回来'}}</view>
+      </view>
+    </view>
+    <view class="arrow-right">></view>
+  </view>
+
+  <!-- 快速操作 -->
+  <view class="quick-actions">
+    <view class="action-item" bindtap="goToPublish">
+      <view class="action-icon publish-icon">📝</view>
+      <view class="action-text">发布拼车</view>
+    </view>
+    <view class="action-item" bindtap="goToCarpoolList">
+      <view class="action-icon search-icon">🔍</view>
+      <view class="action-text">查找拼车</view>
+    </view>
+    <view class="action-item" bindtap="goToProfile">
+      <view class="action-icon profile-icon">👤</view>
+      <view class="action-text">我的拼车</view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view wx:else class="content-container">
+    <!-- 最新拼车 -->
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title">最新拼车</view>
+        <view class="section-more" bindtap="goToCarpoolList">查看更多 ></view>
+      </view>
+      
+      <view wx:if="{{recentCarpools.length > 0}}" class="carpool-list">
+        <view 
+          wx:for="{{recentCarpools}}" 
+          wx:key="_id" 
+          class="carpool-item"
+          data-id="{{item._id}}"
+          bindtap="viewCarpoolDetail"
+        >
+          <view class="carpool-header">
+            <view class="carpool-title">{{item.activityName}}</view>
+            <view class="carpool-status {{item.status === '招募中' ? 'recruiting' : 'full'}}">
+              {{item.status}}
+            </view>
+          </view>
+          
+          <view class="carpool-info">
+            <view class="info-item">
+              <text class="info-icon">📅</text>
+              <text class="info-text">{{item.date}} {{item.time}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">📍</text>
+              <text class="info-text">{{item.location}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">👥</text>
+              <text class="info-text">{{item.currentCount}}/{{item.maxCount}}人</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view wx:else class="empty-state">
+        <view class="empty-icon">🚗</view>
+        <view class="empty-text">暂无拼车信息</view>
+      </view>
+    </view>
+
+    <!-- 热门拼车 -->
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title">热门拼车</view>
+        <view class="section-more" bindtap="goToCarpoolList">查看更多 ></view>
+      </view>
+      
+      <view wx:if="{{hotCarpools.length > 0}}" class="carpool-list">
+        <view 
+          wx:for="{{hotCarpools}}" 
+          wx:key="_id" 
+          class="carpool-item"
+          data-id="{{item._id}}"
+          bindtap="viewCarpoolDetail"
+        >
+          <view class="carpool-header">
+            <view class="carpool-title">{{item.activityName}}</view>
+            <view class="carpool-price">¥{{item.price}}</view>
+          </view>
+          
+          <view class="carpool-info">
+            <view class="info-item">
+              <text class="info-icon">📅</text>
+              <text class="info-text">{{item.date}} {{item.time}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">📍</text>
+              <text class="info-text">{{item.location}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">👥</text>
+              <text class="info-text">{{item.currentCount}}/{{item.maxCount}}人</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view wx:else class="empty-state">
+        <view class="empty-icon">🔥</view>
+        <view class="empty-text">暂无热门拼车</view>
+      </view>
+    </view>
+  </view>
+</view> 

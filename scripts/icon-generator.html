@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabBar 图标生成器</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        
+        .preview-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .icon-preview {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .icon-preview canvas {
+            margin: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        
+        .icon-preview h3 {
+            margin: 15px 0 10px 0;
+            color: #333;
+        }
+        
+        .icon-states {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .icon-state {
+            text-align: center;
+        }
+        
+        .icon-state span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .instructions {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .instructions h3 {
+            color: #2c5aa0;
+            margin-top: 0;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 10px 0;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 TabBar 图标生成器</h1>
+        
+        <div class="instructions">
+            <h3>使用说明</h3>
+            <ol>
+                <li>点击下方的"预览图标"按钮查看图标效果</li>
+                <li>点击"生成并下载图标"按钮下载所有图标文件</li>
+                <li>将下载的图标文件放置到项目的 <code>images/tab/</code> 目录下</li>
+                <li>在 <code>app.json</code> 中添加图标路径配置</li>
+            </ol>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="previewIcons()">🔍 预览图标</button>
+            <button class="btn" onclick="generateAndDownload()">📥 生成并下载图标</button>
+        </div>
+        
+        <div class="preview-section" id="previewSection" style="display: none;">
+            <h3>图标预览</h3>
+            <div class="preview-grid" id="previewGrid">
+                <!-- 图标预览将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="success" id="successMessage">
+            ✅ 图标已成功生成并下载！请将文件放置到 images/tab/ 目录下。
+        </div>
+        
+        <div class="note">
+            <strong>注意：</strong>
+            <ul>
+                <li>图标尺寸为 81x81 像素，符合微信小程序规范</li>
+                <li>普通状态使用灰色 (#7A7E83)，选中状态使用蓝色 (#667eea)</li>
+                <li>如果需要自定义图标，可以使用 IconFont 或其他图标库</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 图标配置
+        const iconConfig = {
+            size: 81,
+            normalColor: '#7A7E83',
+            activeColor: '#667eea',
+            backgroundColor: 'transparent'
+        }
+
+        // 创建canvas元素
+        function createCanvas(size) {
+            const canvas = document.createElement('canvas')
+            canvas.width = size
+            canvas.height = size
+            return canvas
+        }
+
+        // 绘制首页图标
+        function drawHomeIcon(ctx, size, color, filled = false) {
+            const center = size / 2
+            const houseSize = size * 0.6
+            
+            ctx.strokeStyle = color
+            ctx.fillStyle = color
+            ctx.lineWidth = 3
+            ctx.lineCap = 'round'
+            ctx.lineJoin = 'round'
+            
+            // 绘制房子
+            ctx.beginPath()
+            
+            // 屋顶
+            ctx.moveTo(center - houseSize/2, center)
+            ctx.lineTo(center, center - houseSize/3)
+            ctx.lineTo(center + houseSize/2, center)
+            
+            // 房子主体
+            ctx.lineTo(center + houseSize/2, center + houseSize/3)
+            ctx.lineTo(center - houseSize/2, center + houseSize/3)
+            ctx.closePath()
+            
+            if (filled) {
+                ctx.fill()
+            } else {
+                ctx.stroke()
+            }
+            
+            // 门
+            ctx.beginPath()
+            ctx.rect(center - houseSize/8, center + houseSize/6, houseSize/4, houseSize/6)
+            if (filled) {
+                ctx.fillStyle = '#ffffff'
+                ctx.fill()
+            } else {
+                ctx.stroke()
+            }
+        }
+
+        // 绘制拼车图标
+        function drawCarpoolIcon(ctx, size, color, filled = false) {
+            const center = size / 2
+            const carWidth = size * 0.7
+            const carHeight = size * 0.4
+            
+            ctx.strokeStyle = color
+            ctx.fillStyle = color
+            ctx.lineWidth = 3
+            ctx.lineCap = 'round'
+            ctx.lineJoin = 'round'
+            
+            // 绘制汽车主体
+            ctx.beginPath()
+            // 使用简单的矩形代替roundRect（兼容性更好）
+            ctx.rect(center - carWidth/2, center - carHeight/4, carWidth, carHeight/2)
+            
+            if (filled) {
+                ctx.fill()
+            } else {
+                ctx.stroke()
+            }
+            
+            // 绘制车轮
+            const wheelRadius = size * 0.08
+            const wheelY = center + carHeight/4 + wheelRadius/2
+            
+            ctx.beginPath()
+            ctx.arc(center - carWidth/3, wheelY, wheelRadius, 0, Math.PI * 2)
+            ctx.moveTo(center + carWidth/3 + wheelRadius, wheelY)
+            ctx.arc(center + carWidth/3, wheelY, wheelRadius, 0, Math.PI * 2)
+            
+            if (filled) {
+                ctx.fill()
+            } else {
+                ctx.stroke()
+            }
+        }
+
+        // 绘制用户图标
+        function drawProfileIcon(ctx, size, color, filled = false) {
+            const center = size / 2
+            const headRadius = size * 0.15
+            const bodyWidth = size * 0.4
+            
+            ctx.strokeStyle = color
+            ctx.fillStyle = color
+            ctx.lineWidth = 3
+            ctx.lineCap = 'round'
+            ctx.lineJoin = 'round'
+            
+            // 绘制头部
+            ctx.beginPath()
+            ctx.arc(center, center - size * 0.1, headRadius, 0, Math.PI * 2)
+            
+            if (filled) {
+                ctx.fill()
+            } else {
+                ctx.stroke()
+            }
+            
+            // 绘制身体
+            ctx.beginPath()
+            ctx.arc(center, center + size * 0.2, bodyWidth/2, 0, Math.PI, true)
+            
+            if (filled) {
+                ctx.fill()
+            } else {
+                ctx.stroke()
+            }
+        }
+
+        // 生成图标
+        function generateIcon(name, drawFunction, filled = false) {
+            const canvas = createCanvas(iconConfig.size)
+            const ctx = canvas.getContext('2d')
+            
+            // 清除画布
+            ctx.clearRect(0, 0, iconConfig.size, iconConfig.size)
+            
+            // 绘制图标
+            const color = filled ? iconConfig.activeColor : iconConfig.normalColor
+            drawFunction(ctx, iconConfig.size, color, filled)
+            
+            return canvas
+        }
+
+        // 预览图标
+        function previewIcons() {
+            const previewSection = document.getElementById('previewSection')
+            const previewGrid = document.getElementById('previewGrid')
+            
+            const icons = [
+                { name: 'home', title: '首页', drawFunc: drawHomeIcon },
+                { name: 'carpool', title: '拼车', drawFunc: drawCarpoolIcon },
+                { name: 'profile', title: '我的', drawFunc: drawProfileIcon }
+            ]
+            
+            previewGrid.innerHTML = ''
+            
+            icons.forEach(icon => {
+                const iconPreview = document.createElement('div')
+                iconPreview.className = 'icon-preview'
+                
+                const normalCanvas = generateIcon(icon.name, icon.drawFunc, false)
+                const activeCanvas = generateIcon(icon.name, icon.drawFunc, true)
+                
+                iconPreview.innerHTML = `
+                    <h3>${icon.title}</h3>
+                    <div class="icon-states">
+                        <div class="icon-state">
+                            ${normalCanvas.outerHTML}
+                            <span>普通状态</span>
+                        </div>
+                        <div class="icon-state">
+                            ${activeCanvas.outerHTML}
+                            <span>选中状态</span>
+                        </div>
+                    </div>
+                `
+                
+                previewGrid.appendChild(iconPreview)
+            })
+            
+            previewSection.style.display = 'block'
+        }
+
+        // 下载图标
+        function downloadIcon(canvas, filename) {
+            const link = document.createElement('a')
+            link.download = filename
+            link.href = canvas.toDataURL('image/png')
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        }
+
+        // 生成并下载所有图标
+        function generateAndDownload() {
+            const icons = [
+                { name: 'home', drawFunc: drawHomeIcon },
+                { name: 'carpool', drawFunc: drawCarpoolIcon },
+                { name: 'profile', drawFunc: drawProfileIcon }
+            ]
+            
+            icons.forEach(icon => {
+                // 普通状态
+                const normalIcon = generateIcon(icon.name, icon.drawFunc, false)
+                downloadIcon(normalIcon, `${icon.name}.png`)
+                
+                // 选中状态
+                const activeIcon = generateIcon(icon.name, icon.drawFunc, true)
+                downloadIcon(activeIcon, `${icon.name}-active.png`)
+            })
+            
+            // 显示成功消息
+            const successMessage = document.getElementById('successMessage')
+            successMessage.style.display = 'block'
+            
+            setTimeout(() => {
+                successMessage.style.display = 'none'
+            }, 5000)
+        }
+
+        // 页面加载时自动预览
+        window.onload = function() {
+            previewIcons()
+        }
+    </script>
+</body>
+</html> 

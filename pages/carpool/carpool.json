@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "剧本杀拼车",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50
+} 
