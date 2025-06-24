@@ -38,7 +38,6 @@ exports.main = async (event, context) => {
     try {
       const qrResult = await cloud.openapi.wxacode.getUnlimited({
         scene: userId,
-        page: 'pages/add-friend/add-friend',
         width: 430,
         autoColor: false,
         lineColor: {

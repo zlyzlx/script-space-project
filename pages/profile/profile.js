@@ -43,6 +43,24 @@ Page({
       this.setData({ loading: true })
       
       // 检查登录状态
+      if (!app.globalData.hasLogin) {
+        this.requireLogin()
+        return
+      }
+      
+      // 加载保存的微信号
+      const savedWechatId = wx.getStorageSync('wechatId')
+      if (savedWechatId) {
+        this.setData({
+          wechatId: savedWechatId
+        })
+        // 延迟生成二维码，确保canvas已渲染
+        setTimeout(() => {
+          this.generateQRCode(savedWechatId)
+        }, 100)
+      }
+      
+      // 检查登录状态
       await this.loadUserProfile()
       
       // 如果已登录，加载统计数据
@@ -55,6 +73,14 @@ Page({
     } finally {
       this.setData({ loading: false })
     }
+  },
+
+  // 要求登录
+  requireLogin() {
+    this.setData({ loading: false })
+    app.requireAuth(() => {
+      this.initPage()
+    })
   },
 
   // 加载用户资料
@@ -238,12 +264,19 @@ Page({
           userInfo.nickName = this.data.tempNickname
         }
         
+        // 确保头像URL正确
+        if (!userInfo.avatarUrl || userInfo.avatarUrl === '/images/default-avatar.png') {
+          // 如果没有头像，尝试使用微信默认头像
+          userInfo.avatarUrl = res.userInfo.avatarUrl || '/images/default-avatar.png'
+        }
+        
         this.setData({
           userInfo: userInfo,
           hasUserInfo: true,
           tempNickname: '' // 清空临时昵称
         })
         
+        const app = getApp()
         app.globalData.userInfo = userInfo
         app.globalData.hasLogin = true
         
@@ -525,8 +558,28 @@ Page({
   aboutApp() {
     wx.showModal({
       title: '关于我们',
-      content: '剧本杀拼车小程序 v1.0.0\n\n让剧本杀爱好者更容易找到同行伙伴，一起享受推理的乐趣！\n\n基于微信小程序云开发技术构建\n\n功能包括：\n• 发布和查找拼车信息\n• 参与和管理拼车\n• 用户信息管理\n• 行程记录和评价',
+      content: '剧本杀拼局小程序\n\n让剧本杀爱好者更容易找到同行伙伴，一起享受推理的乐趣！\n\n基于微信小程序云开发技术构建\n\n功能包括：\n• 发布和查找拼局信息\n• 参与和管理拼局活动\n• 用户信息管理\n• 行程记录和互动',
       showCancel: false
+    })
+  },
+
+  // 显示隐私政策
+  showPrivacyPolicy() {
+    wx.showModal({
+      title: '隐私政策',
+      content: '我们非常重视您的隐私保护。本应用仅收集必要的用户信息用于提供拼局服务，包括：\n\n1. 微信昵称和头像（用于身份展示）\n2. 位置信息（仅用于拼局活动地点）\n3. 活动记录（用于统计和服务优化）\n\n我们承诺：\n• 不会泄露您的个人信息\n• 不会将信息用于商业目的\n• 您可随时删除个人数据\n• 严格遵守相关法律法规',
+      showCancel: false,
+      confirmText: '我知道了'
+    })
+  },
+
+  // 显示用户协议
+  showUserAgreement() {
+    wx.showModal({
+      title: '用户协议',
+      content: '欢迎使用剧本杀拼局小程序！\n\n使用本服务，即表示您同意：\n\n1. 遵守国家法律法规和社会公德\n2. 发布真实有效的拼局信息\n3. 尊重其他用户，文明互动\n4. 不发布违法违规内容\n5. 保护个人和他人信息安全\n\n注意事项：\n• 线下活动请注意人身安全\n• 费用分摊请当面确认\n• 如遇纠纷请理性协商解决\n\n我们保留对违规行为的处理权利。',
+      showCancel: false,
+      confirmText: '我同意'
     })
   },
 
@@ -638,47 +691,171 @@ Page({
     })
   },
 
-  // 生成微信二维码
-  async generateWechatQRCode() {
-    try {
-      wx.showLoading({
-        title: '生成中...'
-      })
-
-      // 获取当前用户的openid作为场景值
-      const app = getApp()
-      const userInfo = app.globalData.userInfo
-      const scene = userInfo?._openid || wx.getStorageSync('openid') || 'anonymous'
-
-      // 调用云函数生成微信二维码
-      const result = await wx.cloud.callFunction({
-        name: 'generate-wechat-qr',
-        data: {
-          scene: scene
+  // 复制昵称
+  copyNickname() {
+    const nickname = this.getUserNickname()
+    if (nickname) {
+      wx.setClipboardData({
+        data: nickname,
+        success: () => {
+          wx.showToast({
+            title: '昵称已复制',
+            icon: 'success'
+          })
+        },
+        fail: () => {
+          wx.showToast({
+            title: '复制失败',
+            icon: 'none'
+          })
         }
-      })
-
-      wx.hideLoading()
-
-      if (result.result && result.result.success) {
-        this.setData({
-          wechatQRCode: result.result.fileID,
-          showQRCode: true
-        })
-      } else {
-        throw new Error(result.result?.error || '生成二维码失败')
-      }
-    } catch (error) {
-      wx.hideLoading()
-      console.error('生成微信二维码失败:', error)
-      wx.showToast({
-        title: '生成二维码失败',
-        icon: 'none'
       })
     }
   },
 
-  // 显示我的微信二维码
+  // 复制微信号
+  copyWechatId() {
+    if (this.data.wechatId) {
+      wx.setClipboardData({
+        data: this.data.wechatId,
+        success: () => {
+          wx.showToast({
+            title: '微信号已复制',
+            icon: 'success'
+          })
+        },
+        fail: () => {
+          wx.showToast({
+            title: '复制失败',
+            icon: 'none'
+          })
+        }
+      })
+    }
+  },
+
+  // 输入微信号
+  onWechatIdInput(e) {
+    this.setData({
+      inputWechatId: e.detail.value
+    })
+  },
+
+  // 保存微信号
+  saveWechatId() {
+    const wechatId = this.data.inputWechatId.trim()
+    if (wechatId) {
+      this.setData({
+        wechatId: wechatId,
+        inputWechatId: ''
+      })
+      
+      // 保存到本地存储
+      wx.setStorageSync('wechatId', wechatId)
+      
+      // 生成二维码
+      this.generateQRCode(wechatId)
+      
+      wx.showToast({
+        title: '微信号已保存',
+        icon: 'success'
+      })
+    }
+  },
+
+  // 编辑微信号
+  editWechatId() {
+    this.setData({
+      inputWechatId: this.data.wechatId,
+      wechatId: ''
+    })
+  },
+
+  // 生成二维码
+  generateQRCode(text) {
+    const ctx = wx.createCanvasContext('qrCanvas', this)
+    
+    // 简单的文本二维码替代方案
+    // 实际项目中建议使用专业的二维码生成库
+    ctx.setFillStyle('#ffffff')
+    ctx.fillRect(0, 0, 200, 200)
+    
+    ctx.setFillStyle('#000000')
+    ctx.setFontSize(16)
+    ctx.setTextAlign('center')
+    
+    // 绘制标题
+    ctx.fillText('微信号', 100, 40)
+    ctx.fillText(text, 100, 80)
+    
+    // 绘制简单的方块图案作为装饰
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        if ((i + j) % 2 === 0) {
+          ctx.fillRect(20 + i * 16, 100 + j * 8, 8, 8)
+        }
+      }
+    }
+    
+    ctx.draw()
+  },
+
+  // 保存二维码
+  saveQRCode() {
+    wx.canvasToTempFilePath({
+      canvasId: 'qrCanvas',
+      success: (res) => {
+        wx.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success: () => {
+            wx.showToast({
+              title: '已保存到相册',
+              icon: 'success'
+            })
+          },
+          fail: (err) => {
+            if (err.errMsg.includes('auth deny')) {
+              wx.showModal({
+                title: '需要相册权限',
+                content: '保存二维码需要访问您的相册权限',
+                confirmText: '去设置',
+                success: (res) => {
+                  if (res.confirm) {
+                    wx.openSetting()
+                  }
+                }
+              })
+            } else {
+              wx.showToast({
+                title: '保存失败',
+                icon: 'none'
+              })
+            }
+          }
+        })
+      },
+      fail: () => {
+        wx.showToast({
+          title: '生成图片失败',
+          icon: 'none'
+        })
+      }
+    }, this)
+  },
+
+  // 分享名片
+  shareProfile() {
+    const nickname = this.getUserNickname()
+    const avatar = this.getUserAvatarUrl()
+    
+    return {
+      title: `${nickname}的拼局名片`,
+      path: '/pages/index/index',
+      imageUrl: avatar
+    }
+  },
+
+  // 显示我的名片
   showMyQRCode() {
     // 检查是否有昵称（已登录用户或临时昵称）
     const nickname = this.data.hasUserInfo ? 
@@ -693,11 +870,7 @@ Page({
       return
     }
 
-    if (this.data.wechatQRCode) {
-      this.setData({ showQRCode: true })
-    } else {
-      this.generateWechatQRCode()
-    }
+    this.setData({ showQRCode: true })
   },
 
   // 隐藏二维码
@@ -705,43 +878,5 @@ Page({
     this.setData({ showQRCode: false })
   },
 
-  // 保存二维码到相册
-  saveQRCodeToAlbum() {
-    if (!this.data.wechatQRCode) {
-      wx.showToast({
-        title: '二维码不存在',
-        icon: 'none'
-      })
-      return
-    }
 
-    wx.saveImageToPhotosAlbum({
-      filePath: this.data.wechatQRCode,
-      success: () => {
-        wx.showToast({
-          title: '已保存到相册',
-          icon: 'success'
-        })
-      },
-      fail: (err) => {
-        if (err.errMsg.includes('auth deny')) {
-          wx.showModal({
-            title: '需要相册权限',
-            content: '保存二维码需要访问您的相册权限',
-            confirmText: '去设置',
-            success: (res) => {
-              if (res.confirm) {
-                wx.openSetting()
-              }
-            }
-          })
-        } else {
-          wx.showToast({
-            title: '保存失败',
-            icon: 'none'
-          })
-        }
-      }
-    })
-  }
 }) 

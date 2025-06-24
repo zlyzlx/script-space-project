@@ -2,8 +2,8 @@
 <view class="auth-container">
   <!-- 顶部装饰 -->
   <view class="auth-header">
-    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
-    <view class="title">剧本杀拼车</view>
+    <view class="logo-placeholder">🚗</view>
+    <view class="title">剧本杀拼局</view>
     <view class="subtitle">找到你的推理伙伴</view>
   </view>
 
@@ -44,7 +44,7 @@
         </view>
         <view class="tip-item">
           <text class="tip-icon">✨</text>
-          <text>登录后可发布和参与拼车活动</text>
+          <text>登录后可发布和参与拼局活动</text>
         </view>
         <view class="tip-item">
           <text class="tip-icon">🚗</text>
@@ -54,7 +54,7 @@
 
       <!-- 必须登录提示 -->
       <view class="required-login-tip">
-        <text class="tip-text">⚠️ 需要微信授权才能使用拼车功能</text>
+        <text class="tip-text">⚠️ 需要微信授权才能使用拼局功能</text>
       </view>
     </view>
 
@@ -71,7 +71,7 @@
         </button>
         
         <view class="user-name">{{userInfo.nickName}}</view>
-        <view class="welcome-text">欢迎加入剧本杀拼车！</view>
+        <view class="welcome-text">欢迎加入剧本杀拼局！</view>
       </view>
 
       <view class="login-actions">

@@ -56,8 +56,8 @@ exports.main = async (event, context) => {
       
       participantsInfo = usersResult.data.map(user => ({
         id: user._openid,
-        nickname: user.nickname,
-        avatar: user.avatar,
+        nickname: user.nickName || user.nickname || '微信用户',
+        avatar: user.avatarUrl || user.avatar || '',
         joinTime: participantsResult.data.find(p => p.userId === user._openid)?.joinTime
       }))
     }
@@ -75,8 +75,8 @@ exports.main = async (event, context) => {
       .get()
     
     const organizerInfo = organizerResult.data[0] || {
-      nickname: '未知用户',
-      avatar: ''
+      nickName: '未知用户',
+      avatarUrl: ''
     }
     
     const result = {
@@ -85,8 +85,8 @@ exports.main = async (event, context) => {
       currentCount: participantsInfo.length,
       organizer: {
         id: carpoolData.organizerId,
-        nickname: organizerInfo.nickname,
-        avatar: organizerInfo.avatar,
+        nickname: organizerInfo.nickName || organizerInfo.nickname || '微信用户',
+        avatar: organizerInfo.avatarUrl || organizerInfo.avatar || '',
         phone: organizerInfo.phone || ''
       },
       isParticipant,

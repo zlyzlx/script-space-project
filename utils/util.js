@@ -9,6 +9,49 @@ const formatTime = date => {
   return `${[year, month, day].map(formatNumber).join('/')} ${[hour, minute, second].map(formatNumber).join(':')}`
 }
 
+/**
+ * 格式化友好的时间显示
+ * @param {Date|string} date 日期对象或日期字符串
+ * @returns {string} 格式化后的时间字符串
+ */
+const formatFriendlyTime = (date) => {
+  if (!date) return ''
+  
+  const targetDate = typeof date === 'string' ? new Date(date) : date
+  const year = targetDate.getFullYear()
+  const month = targetDate.getMonth() + 1
+  const day = targetDate.getDate()
+  const hour = targetDate.getHours()
+  const minute = targetDate.getMinutes()
+  
+  return `${year}-${formatNumber(month)}-${formatNumber(day)} ${formatNumber(hour)}:${formatNumber(minute)}`
+}
+
+/**
+ * 格式化相对时间（多久前）
+ * @param {Date|string} date 日期对象或日期字符串
+ * @returns {string} 相对时间字符串
+ */
+const formatRelativeTime = (date) => {
+  if (!date) return ''
+  
+  const targetDate = typeof date === 'string' ? new Date(date) : date
+  const now = new Date()
+  const diff = now.getTime() - targetDate.getTime()
+  
+  const minutes = Math.floor(diff / (1000 * 60))
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  
+  if (minutes < 1) return '刚刚'
+  if (minutes < 60) return `${minutes}分钟前`
+  if (hours < 24) return `${hours}小时前`
+  if (days < 7) return `${days}天前`
+  
+  // 超过7天显示具体日期
+  return formatFriendlyTime(targetDate)
+}
+
 const formatNumber = n => {
   n = n.toString()
   return n[1] ? n : `0${n}`
@@ -51,6 +94,8 @@ const processAvatarUrl = (avatarUrl, nickname = '') => {
 
 module.exports = {
   formatTime,
+  formatFriendlyTime,
+  formatRelativeTime,
   getDefaultAvatar,
   processAvatarUrl
 } 

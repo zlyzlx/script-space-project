@@ -1,3 +1,5 @@
+const app = getApp()
+
 Page({
   data: {
     mode: 'create', // create 或 edit
@@ -26,35 +28,15 @@ Page({
    */
   onLoad(options) {
     console.log('发布拼车页面加载')
+    this.options = options
+    
     // 检查登录状态
-    if (!this.checkLoginStatus()) {
-      return; // 未登录会自动跳转到登录页面
+    if (!app.globalData.hasLogin) {
+      this.requireLogin()
+      return
     }
     
-    const mode = options.mode || 'create'
-    const editId = options.id || null
-    
-    // 设置日期范围（当前日期到30天后）
-    const today = new Date()
-    const maxDate = new Date()
-    maxDate.setDate(today.getDate() + 30)
-    
-    this.setData({
-      mode,
-      editId,
-      minDate: today.toISOString().split('T')[0],
-      maxDate: maxDate.toISOString().split('T')[0]
-    })
-
-    // 如果是编辑模式，加载数据
-    if (mode === 'edit' && editId) {
-      this.loadEditData(editId)
-    }
-
-    // 设置导航栏标题
-    wx.setNavigationBarTitle({
-      title: mode === 'edit' ? '编辑拼车' : '发布拼车'
-    })
+    this.initPage()
   },
 
   async loadEditData(id) {
@@ -153,7 +135,7 @@ Page({
     })
     
     // 提示用户开关的含义
-    const message = checked ? '您将作为参与者加入这次拼车' : '您只负责组织，不占用拼车名额'
+    const message = checked ? '您将作为参与者加入这次拼局' : '您只负责组织，不占用拼局名额'
     wx.showToast({
       title: message,
       icon: 'none',
@@ -202,7 +184,7 @@ Page({
       errors.push('请选择活动地点')
     }
     if (!formData.price || formData.price <= 0) {
-      errors.push('请填写有效的拼车费用')
+      errors.push('请填写有效的AA费用')
     }
     if (formData.maxCount < 2 || formData.maxCount > 10) {
       errors.push('人数限制应在2-10人之间')
@@ -333,30 +315,39 @@ Page({
     })
   },
 
-  // 检查登录状态
-  checkLoginStatus() {
-    const app = getApp()
-    const userInfo = app.globalData.userInfo
-    const isLoggedIn = userInfo && userInfo.nickName && !userInfo.isGuest
+  // 要求登录
+  requireLogin() {
+    app.requireAuth(() => {
+      this.initPage()
+    })
+  },
+
+  // 初始化页面数据
+  initPage() {
+    const options = this.options || {}
+    const mode = options.mode || 'create'
+    const editId = options.id || null
     
-    if (!isLoggedIn) {
-      wx.showModal({
-        title: '需要登录',
-        content: '发布拼车需要微信授权登录',
-        confirmText: '去登录',
-        cancelText: '取消',
-        success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({
-              url: '/pages/auth/auth'
-            })
-          } else {
-            wx.navigateBack()
-          }
-        }
-      })
-      return false
+    // 设置日期范围（当前日期到30天后）
+    const today = new Date()
+    const maxDate = new Date()
+    maxDate.setDate(today.getDate() + 30)
+    
+    this.setData({
+      mode,
+      editId,
+      minDate: today.toISOString().split('T')[0],
+      maxDate: maxDate.toISOString().split('T')[0]
+    })
+
+    // 如果是编辑模式，加载数据
+    if (mode === 'edit' && editId) {
+      this.loadEditData(editId)
     }
-    return true
+
+    // 设置导航栏标题
+    wx.setNavigationBarTitle({
+      title: mode === 'edit' ? '编辑拼局' : '发布拼局'
+    })
   }
 }) 

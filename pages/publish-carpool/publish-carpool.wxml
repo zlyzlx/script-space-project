@@ -63,7 +63,7 @@
 
     <!-- 拼车设置 -->
     <view class="form-container">
-      <view class="section-title">拼车设置</view>
+              <view class="section-title">拼局设置</view>
       
       <view class="form-item">
         <view class="item-label required">最大人数</view>
@@ -80,11 +80,11 @@
       </view>
 
       <view class="form-item">
-        <view class="item-label required">拼车费用</view>
+        <view class="item-label required">AA费用</view>
         <view class="price-input">
           <input 
             class="item-input"
-            placeholder="请输入每人费用"
+            placeholder="请输入每人分摊费用"
             value="{{formData.price}}"
             data-field="price"
             bindinput="onFormChange"
@@ -102,7 +102,7 @@
             bindchange="onOrganizerJoinsChange"
             color="#ffc1cc"
           />
-          <text class="switch-desc">{{formData.organizerJoins ? '我也参与这次拼车' : '我只是组织者，不参与拼车'}}</text>
+          <text class="switch-desc">{{formData.organizerJoins ? '我也参与这次拼局' : '我只是组织者，不参与拼局'}}</text>
         </view>
       </view>
     </view>

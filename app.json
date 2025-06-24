@@ -13,7 +13,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#ff9aa2",
-    "navigationBarTitleText": "剧本杀拼车",
+    "navigationBarTitleText": "剧本杀拼局",
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
@@ -28,7 +28,7 @@
       },
       {
         "pagePath": "pages/carpool/list",
-        "text": "拼车"
+        "text": "拼局"
       },
       {
         "pagePath": "pages/profile/profile",

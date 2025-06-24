@@ -16,15 +16,15 @@
   <view class="quick-actions">
     <view class="action-item" bindtap="goToPublish">
       <view class="action-icon publish-icon">📝</view>
-      <view class="action-text">发布拼车</view>
+              <view class="action-text">发布拼局</view>
     </view>
     <view class="action-item" bindtap="goToCarpoolList">
       <view class="action-icon search-icon">🔍</view>
-      <view class="action-text">查找拼车</view>
+              <view class="action-text">查找拼局</view>
     </view>
     <view class="action-item" bindtap="goToProfile">
       <view class="action-icon profile-icon">👤</view>
-      <view class="action-text">我的拼车</view>
+              <view class="action-text">我的拼局</view>
     </view>
   </view>
 
@@ -38,7 +38,7 @@
     <!-- 最新拼车 -->
     <view class="section">
       <view class="section-header">
-        <view class="section-title">最新拼车</view>
+        <view class="section-title">最新拼局</view>
         <view class="section-more" bindtap="goToCarpoolList">查看更多 ></view>
       </view>
       
@@ -76,14 +76,14 @@
       
       <view wx:else class="empty-state">
         <view class="empty-icon">🚗</view>
-        <view class="empty-text">暂无拼车信息</view>
+        <view class="empty-text">暂无拼局信息</view>
       </view>
     </view>
 
     <!-- 热门拼车 -->
     <view class="section">
       <view class="section-header">
-        <view class="section-title">热门拼车</view>
+        <view class="section-title">热门拼局</view>
         <view class="section-more" bindtap="goToCarpoolList">查看更多 ></view>
       </view>
       
@@ -119,7 +119,7 @@
       
       <view wx:else class="empty-state">
         <view class="empty-icon">🔥</view>
-        <view class="empty-text">暂无热门拼车</view>
+        <view class="empty-text">暂无热门拼局</view>
       </view>
     </view>
   </view>

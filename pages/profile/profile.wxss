@@ -491,47 +491,163 @@
   color: #666;
 }
 
-.qr-code-container {
-  margin: 40rpx 0;
-  display: flex;
-  justify-content: center;
-}
-
-.qr-code {
-  width: 400rpx;
-  height: 400rpx;
-  border-radius: 20rpx;
-  border: 1rpx solid #f0f0f0;
-}
-
-.qr-loading {
-  width: 400rpx;
-  height: 400rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.contact-info {
+  margin: 30rpx 0;
   background: #f8f9fa;
-  border-radius: 20rpx;
+  border-radius: 16rpx;
+  padding: 25rpx;
+}
+
+.info-item {
+  margin-bottom: 15rpx;
+  line-height: 1.6;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
   font-size: 28rpx;
   color: #666;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.wechat-input {
+  display: inline-block;
+  background: white;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 8rpx;
+  padding: 8rpx 12rpx;
+  font-size: 28rpx;
+  color: #333;
+  width: 300rpx;
+  margin-right: 10rpx;
+}
+
+.wechat-input:focus {
+  border-color: #ffc1cc;
+}
+
+.edit-btn {
+  display: inline-block;
+  background: #f0f0f0;
+  color: #666;
+  border: none;
+  border-radius: 6rpx;
+  padding: 8rpx 16rpx;
+  font-size: 24rpx;
+  margin-left: 10rpx;
+}
+
+.edit-btn::after {
+  border: none;
+}
+
+.contact-guide {
+  margin: 30rpx 0;
+  background: rgba(255, 193, 204, 0.1);
+  border-radius: 16rpx;
+  padding: 25rpx;
+  border-left: 4rpx solid #ffc1cc;
+}
+
+.guide-title {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 15rpx;
+}
+
+.guide-text {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+  line-height: 1.5;
+}
+
+.guide-steps {
+  margin-top: 15rpx;
+}
+
+.step-item {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  line-height: 1.5;
+}
+
+.qr-code-section {
+  margin: 30rpx 0;
+  text-align: center;
+}
+
+.qr-code-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.qr-canvas {
+  border: 1rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  background: white;
+}
+
+.qr-info {
+  margin-top: 15rpx;
+}
+
+.qr-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
 }
 
 .qr-actions {
   margin-top: 40rpx;
+  display: flex;
+  gap: 15rpx;
+  flex-wrap: wrap;
 }
 
+.copy-btn,
+.share-btn,
 .save-btn {
-  width: 100%;
-  height: 88rpx;
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  color: #ffffff;
-  border-radius: 44rpx;
-  font-size: 32rpx;
+  flex: 1;
+  min-width: 150rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
   font-weight: 500;
   border: none;
+}
+
+.copy-btn {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.share-btn {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: #ffffff;
   box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.4);
 }
 
+.save-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #ffffff;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+}
+
+.copy-btn::after,
+.share-btn::after,
 .save-btn::after {
   border: none;
 }

@@ -154,22 +154,28 @@ async function createTestData() {
     const testUsers = [
       {
         _openid: 'test_user_1',
-        nickname: '剧本杀爱好者',
-        avatar: '/images/default-avatar.png',
+        nickName: '剧本杀爱好者',
+        nickname: '剧本杀爱好者', // 兼容性字段
+        avatarUrl: '',
+        avatar: '', // 兼容性字段
         createTime: new Date(),
         updateTime: new Date()
       },
       {
         _openid: 'test_user_2', 
-        nickname: '拼车达人',
-        avatar: '/images/default-avatar.png',
+        nickName: '拼车达人',
+        nickname: '拼车达人', // 兼容性字段
+        avatarUrl: '',
+        avatar: '', // 兼容性字段
         createTime: new Date(),
         updateTime: new Date()
       },
       {
         _openid: 'test_user_3',
-        nickname: '社交高手',
-        avatar: '/images/default-avatar.png',
+        nickName: '社交高手',
+        nickname: '社交高手', // 兼容性字段
+        avatarUrl: '',
+        avatar: '', // 兼容性字段
         createTime: new Date(),
         updateTime: new Date()
       }
@@ -178,9 +184,9 @@ async function createTestData() {
     for (const user of testUsers) {
       try {
         await db.collection('users').add({ data: user })
-        console.log(`创建测试用户: ${user.nickname}`)
+        console.log(`创建测试用户: ${user.nickName}`)
       } catch (error) {
-        console.log(`用户 ${user.nickname} 可能已存在`)
+                  console.log(`用户 ${user.nickName} 可能已存在`)
       }
     }
     

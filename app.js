@@ -59,11 +59,6 @@ App({
     
     console.log('用户登录状态:', hasUserInfo ? '已登录' : '未登录');
     
-    // 如果未登录且不在登录页面，跳转到登录页面
-    if (!hasUserInfo && !this.isLoginPage()) {
-      this.navigateToLogin();
-    }
-    
     return hasUserInfo;
   },
 
@@ -170,17 +165,7 @@ App({
   // 检查是否需要授权登录
   requireAuth(callback) {
     if (!this.globalData.hasLogin) {
-      wx.showModal({
-        title: '需要登录',
-        content: '此功能需要微信授权登录才能使用',
-        confirmText: '去登录',
-        cancelText: '取消',
-        success: (res) => {
-          if (res.confirm) {
-            this.navigateToLogin();
-          }
-        }
-      });
+      this.showLoginModal(callback);
       return false;
     }
     
@@ -188,6 +173,108 @@ App({
       callback();
     }
     return true;
+  },
+
+  // 显示登录弹窗
+  showLoginModal(callback) {
+    wx.showModal({
+      title: '需要登录',
+      content: '此功能需要微信授权登录才能使用',
+      confirmText: '微信登录',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          this.showAuthModal(callback);
+        }
+      }
+    });
+  },
+
+  // 显示微信授权弹窗
+  showAuthModal(callback) {
+    // 检查是否支持新的getUserProfile API
+    if (wx.canIUse('getUserProfile')) {
+      wx.getUserProfile({
+        desc: '用于完善用户资料和提供拼车服务',
+        success: (res) => {
+          console.log('获取用户信息成功', res);
+          this.handleAuthSuccess(res.userInfo, callback);
+        },
+        fail: (err) => {
+          console.error('获取用户信息失败', err);
+          wx.showToast({
+            title: '授权失败',
+            icon: 'none'
+          });
+        }
+      });
+    } else {
+      // 兼容旧版本
+      wx.showModal({
+        title: '提示',
+        content: '请升级微信版本后重试',
+        showCancel: false
+      });
+    }
+  },
+
+  // 处理授权成功
+  async handleAuthSuccess(userInfo, callback) {
+    try {
+      wx.showLoading({
+        title: '登录中...'
+      });
+
+      // 确保不是游客用户
+      userInfo.isGuest = false;
+      
+      // 调用云函数保存用户信息
+      const result = await wx.cloud.callFunction({
+        name: 'user-update',
+        data: {
+          nickname: userInfo.nickName,
+          avatar: userInfo.avatarUrl
+        }
+      });
+      
+      console.log('用户信息保存成功', result);
+      
+      // 保存用户信息
+      this.globalData.userInfo = userInfo;
+      this.globalData.hasLogin = true;
+      wx.setStorageSync('userInfo', userInfo);
+      
+      wx.hideLoading();
+      wx.showToast({
+        title: '登录成功',
+        icon: 'success'
+      });
+      
+      // 执行回调
+      if (callback && typeof callback === 'function') {
+        callback();
+      }
+      
+    } catch (error) {
+      console.error('保存用户信息失败', error);
+      wx.hideLoading();
+      
+      // 即使云端保存失败，也允许本地登录
+      userInfo.isGuest = false;
+      this.globalData.userInfo = userInfo;
+      this.globalData.hasLogin = true;
+      wx.setStorageSync('userInfo', userInfo);
+      
+      wx.showToast({
+        title: '登录成功',
+        icon: 'success'
+      });
+      
+      // 执行回调
+      if (callback && typeof callback === 'function') {
+        callback();
+      }
+    }
   },
 
   globalData: {

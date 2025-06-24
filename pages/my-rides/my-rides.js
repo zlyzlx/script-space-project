@@ -1,3 +1,5 @@
+const app = getApp()
+
 Page({
   /**
    * 页面的初始数据
@@ -16,6 +18,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    // 检查登录状态
+    if (!app.globalData.hasLogin) {
+      this.requireLogin()
+      return
+    }
     this.loadMyRides()
   },
 
@@ -30,6 +37,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
+    // 检查登录状态
+    if (!app.globalData.hasLogin) {
+      this.requireLogin()
+      return
+    }
     // 页面显示时刷新数据
     this.refreshData()
   },
@@ -70,7 +82,7 @@ Page({
    */
   onShareAppMessage() {
     return {
-      title: '我的拼车行程',
+      title: '我的拼局行程',
       path: '/pages/my-rides/my-rides'
     }
   },
@@ -173,7 +185,7 @@ Page({
     
     wx.showModal({
       title: '确认退出',
-      content: `确定要退出"${ride.activityName}"的拼车吗？`,
+              content: `确定要退出"${ride.activityName}"的拼局吗？`,
       confirmText: '确认退出',
       confirmColor: '#FF6B6B',
       success: (res) => {
@@ -230,8 +242,8 @@ Page({
     const ride = this.data.ridesList.find(item => item.id === id)
     
     wx.showModal({
-      title: '评价拼车',
-      content: '请为这次拼车体验打分（1-5分）',
+              title: '评价拼局',
+        content: '请为这次拼局体验打分（1-5分）',
       editable: true,
       placeholderText: '请输入1-5的数字',
       success: (res) => {
@@ -294,6 +306,13 @@ Page({
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
       url: `/pages/carpool-detail/carpool-detail?id=${id}`
+    })
+  },
+
+  // 要求登录
+  requireLogin() {
+    app.requireAuth(() => {
+      this.loadMyRides()
     })
   }
 }) 

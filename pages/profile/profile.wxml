@@ -8,8 +8,8 @@
   <!-- 未登录状态 -->
   <view wx:if="{{!hasUserInfo && !loading}}" class="login-section">
     <view class="login-card">
-      <view class="login-title">欢迎使用拼车小程序</view>
-      <view class="login-desc">登录后可以发布和参与拼车</view>
+      <view class="login-title">欢迎使用拼局小程序</view>
+      <view class="login-desc">登录后可以发布和参与拼局</view>
       <view class="nickname-section">
         <input 
           class="nickname-input"
@@ -78,11 +78,11 @@
       <view class="stats-grid">
         <view class="stat-item" bindtap="viewMyCarpool">
           <view class="stat-number">{{myCarpoolCount}}</view>
-          <view class="stat-label">发布的拼车</view>
+          <view class="stat-label">发布的拼局</view>
         </view>
         <view class="stat-item" bindtap="viewMyRides">
           <view class="stat-number">{{myRidesCount}}</view>
-          <view class="stat-label">参与的拼车</view>
+          <view class="stat-label">参与的拼局</view>
         </view>
         <view class="stat-item">
           <view class="stat-number">{{totalParticipants}}</view>
@@ -101,12 +101,12 @@
       <view class="actions-grid">
         <view class="action-item" bindtap="publishCarpool">
           <view class="action-icon publish">📝</view>
-          <view class="action-title">发布拼车</view>
+          <view class="action-title">发布拼局</view>
           <view class="action-desc">快速发布</view>
         </view>
         <view class="action-item" bindtap="searchCarpool">
           <view class="action-icon search">🔍</view>
-          <view class="action-title">搜索拼车</view>
+          <view class="action-title">搜索拼局</view>
           <view class="action-desc">找到合适的</view>
         </view>
       </view>
@@ -116,19 +116,43 @@
     <view class="menu-section">
       <view class="menu-item" bindtap="publishCarpool">
         <view class="menu-icon">🚗</view>
-        <view class="menu-text">发布拼车</view>
+                  <view class="menu-text">发布拼局</view>
         <view class="menu-arrow">></view>
       </view>
       
       <view class="menu-item" bindtap="searchCarpool">
         <view class="menu-icon">🔍</view>
-        <view class="menu-text">搜索拼车</view>
+                  <view class="menu-text">搜索拼局</view>
         <view class="menu-arrow">></view>
       </view>
       
       <view class="menu-item" bindtap="goToSettings">
         <view class="menu-icon">⚙️</view>
         <view class="menu-text">设置</view>
+        <view class="menu-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="showPrivacyPolicy">
+        <view class="menu-icon">🔒</view>
+        <view class="menu-text">隐私政策</view>
+        <view class="menu-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="showUserAgreement">
+        <view class="menu-icon">📄</view>
+        <view class="menu-text">用户协议</view>
+        <view class="menu-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="aboutApp">
+        <view class="menu-icon">ℹ️</view>
+        <view class="menu-text">关于我们</view>
+        <view class="menu-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="feedback">
+        <view class="menu-icon">💬</view>
+        <view class="menu-text">意见反馈</view>
         <view class="menu-arrow">></view>
       </view>
     </view>
@@ -138,7 +162,7 @@
   <view wx:if="{{showQRCode}}" class="qr-modal" bindtap="hideQRCode">
     <view class="qr-content" catchtap="{{true}}">
       <view class="qr-header">
-        <view class="qr-title">我的微信二维码</view>
+        <view class="qr-title">我的个人名片</view>
         <button class="close-btn" bindtap="hideQRCode">✕</button>
       </view>
       
@@ -146,16 +170,62 @@
         <view class="qr-user-info">
           <image class="qr-avatar" src="{{getUserAvatarUrl()}}" mode="scaleToFill"></image>
           <view class="qr-name">{{getUserNickname()}}</view>
-          <view class="qr-tip">扫描二维码，添加我为好友</view>
+          <view class="qr-tip">我的个人名片</view>
         </view>
         
-        <view class="qr-code-container">
-          <image wx:if="{{wechatQRCode}}" class="qr-code" src="{{wechatQRCode}}" mode="aspectFit"></image>
-          <view wx:else class="qr-loading">生成中...</view>
+        <view class="contact-info">
+          <view class="info-item">
+            <text class="info-label">昵称：</text>
+            <text class="info-value">{{getUserNickname()}}</text>
+          </view>
+          <view class="info-item">
+            <text class="info-label">拼局记录：</text>
+            <text class="info-value">发布{{myCarpoolCount}}次，参与{{myRidesCount}}次</text>
+          </view>
+          <view class="info-item">
+            <text class="info-label">微信号：</text>
+            <input 
+              wx:if="{{!wechatId}}"
+              class="wechat-input"
+              placeholder="输入您的微信号"
+              value="{{inputWechatId}}"
+              bindinput="onWechatIdInput"
+              bindblur="saveWechatId"
+              maxlength="20"
+            />
+            <text wx:else class="info-value">{{wechatId}}</text>
+            <button wx:if="{{wechatId}}" class="edit-btn" bindtap="editWechatId">编辑</button>
+          </view>
+        </view>
+        
+        <view wx:if="{{wechatId}}" class="qr-code-section">
+          <view class="qr-code-container">
+            <canvas 
+              canvas-id="qrCanvas"
+              class="qr-canvas"
+              style="width: 400rpx; height: 400rpx;"
+            ></canvas>
+          </view>
+          <view class="qr-info">
+            <text class="qr-desc">扫描二维码获取微信号：{{wechatId}}</text>
+          </view>
+        </view>
+        
+        <view wx:else class="contact-guide">
+          <view class="guide-title">💬 设置微信号</view>
+          <view class="guide-text">输入您的微信号，生成专属二维码方便他人添加</view>
+          <view class="guide-steps">
+            <view class="step-item">1. 在上方输入您的微信号</view>
+            <view class="step-item">2. 系统将生成包含微信号的二维码</view>
+            <view class="step-item">3. 其他用户扫码可获取您的微信号</view>
+          </view>
         </view>
         
         <view class="qr-actions">
-          <button class="save-btn" bindtap="saveQRCodeToAlbum">保存到相册</button>
+          <button wx:if="{{wechatId}}" class="copy-btn" bindtap="copyWechatId">复制微信号</button>
+          <button wx:else class="copy-btn" bindtap="copyNickname">复制昵称</button>
+          <button class="share-btn" bindtap="shareProfile">分享名片</button>
+          <button wx:if="{{wechatId}}" class="save-btn" bindtap="saveQRCode">保存二维码</button>
         </view>
       </view>
     </view>

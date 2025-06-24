@@ -9,8 +9,19 @@ Page({
     loading: true
   },
 
-  onLoad() {
-    console.log('首页加载')
+  onLoad(options) {
+    console.log('首页加载', options)
+    
+    // 检查是否从二维码扫码进入
+    if (options.scene) {
+      console.log('从二维码扫码进入，场景值:', options.scene)
+      // 跳转到添加好友页面
+      wx.navigateTo({
+        url: `/pages/add-friend/add-friend?scene=${options.scene}`
+      })
+      return
+    }
+    
     // 延迟检查登录状态，确保 app 初始化完成
     setTimeout(() => {
       this.initPage()
@@ -198,11 +209,9 @@ Page({
 
   // 查看拼车详情
   viewCarpoolDetail(e) {
-    app.requireAuth(() => {
-      const carpoolId = e.currentTarget.dataset.id
-      wx.navigateTo({
-        url: `/pages/carpool-detail/carpool-detail?id=${carpoolId}`
-      })
+    const carpoolId = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: `/pages/carpool-detail/carpool-detail?id=${carpoolId}`
     })
   },
 

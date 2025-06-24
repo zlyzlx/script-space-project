@@ -1,4 +1,7 @@
 // pages/carpool-detail/carpool-detail.js
+const { formatFriendlyTime, formatRelativeTime, processAvatarUrl } = require('../../utils/util')
+const app = getApp()
+
 Page({
 
   /**
@@ -99,6 +102,31 @@ Page({
       if (result.result.success) {
         const carpoolData = result.result.data
         
+        // 格式化时间显示
+        if (carpoolData.publishTime) {
+          carpoolData.publishTime = formatRelativeTime(carpoolData.publishTime)
+        }
+        if (carpoolData.departureTime) {
+          carpoolData.departureTime = formatFriendlyTime(carpoolData.departureTime)
+        }
+        
+        // 处理组织者头像
+        if (carpoolData.organizer) {
+          carpoolData.organizer.avatar = processAvatarUrl(
+            carpoolData.organizer.avatar, 
+            carpoolData.organizer.nickname
+          )
+        }
+        
+        // 处理参与者头像和时间
+        if (carpoolData.participants) {
+          carpoolData.participants = carpoolData.participants.map(participant => ({
+            ...participant,
+            avatar: processAvatarUrl(participant.avatar, participant.nickname),
+            joinTime: participant.joinTime ? formatRelativeTime(participant.joinTime) : ''
+          }))
+        }
+        
         this.setData({
           carpoolDetail: carpoolData,
           isParticipant: carpoolData.isParticipant,
@@ -122,9 +150,17 @@ Page({
   },
 
   joinCarpool() {
+    // 检查登录状态
+    if (!app.globalData.hasLogin) {
+      app.requireAuth(() => {
+        this.joinCarpool()
+      })
+      return
+    }
+
     if (this.data.isParticipant) {
       wx.showToast({
-        title: '您已参与此拼车',
+        title: '您已参与此拼局',
         icon: 'none'
       })
       return
@@ -133,7 +169,7 @@ Page({
     const { carpoolDetail } = this.data
     if (carpoolDetail.currentCount >= carpoolDetail.maxCount) {
       wx.showToast({
-        title: '拼车已满员',
+        title: '拼局已满员',
         icon: 'none'
       })
       return
@@ -141,7 +177,7 @@ Page({
 
     wx.showModal({
       title: '确认参与',
-      content: `确定要参与这个拼车吗？费用：¥${carpoolDetail.price}/人`,
+              content: `确定要参与这个拼局吗？AA费用：¥${carpoolDetail.price}/人`,
       confirmText: '确认参与',
       confirmColor: '#4ECDC4',
       success: (res) => {
@@ -194,9 +230,17 @@ Page({
   },
 
   quitCarpool() {
+    // 检查登录状态
+    if (!app.globalData.hasLogin) {
+      app.requireAuth(() => {
+        this.quitCarpool()
+      })
+      return
+    }
+
     wx.showModal({
       title: '确认退出',
-      content: '确定要退出这个拼车吗？',
+              content: '确定要退出这个拼局吗？',
       confirmText: '确认退出',
       confirmColor: '#FF6B6B',
       success: (res) => {
@@ -369,7 +413,7 @@ Page({
 
   shareCarpool() {
     return {
-      title: `${this.data.carpoolDetail.activityName} - 拼车信息`,
+              title: `${this.data.carpoolDetail.activityName} - 拼局信息`,
       path: `/pages/carpool-detail/carpool-detail?id=${this.data.carpoolId}`,
       imageUrl: ''
     }

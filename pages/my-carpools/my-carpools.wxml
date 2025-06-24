@@ -2,8 +2,8 @@
 <view class="container">
   <!-- 页面标题 -->
   <view class="page-header">
-    <view class="header-title">我发布的拼车</view>
-    <view class="header-subtitle">管理你发布的所有拼车活动</view>
+    <view class="header-title">我发布的拼局</view>
+    <view class="header-subtitle">管理你发布的所有拼局活动</view>
   </view>
 
   <!-- 状态筛选 -->
@@ -34,7 +34,7 @@
   <view class="stats-container">
     <view class="stat-item">
       <view class="stat-number">{{total}}</view>
-      <view class="stat-label">总拼车数</view>
+              <view class="stat-label">总拼局数</view>
     </view>
     <view class="stat-divider"></view>
     <view class="stat-item">
@@ -57,8 +57,8 @@
 
     <view wx:elif="{{carpoolList.length === 0}}" class="empty-container">
       <view class="empty-icon">🚗</view>
-      <view class="empty-title">还没有发布拼车</view>
-      <view class="empty-subtitle">快去发布你的第一个拼车活动吧</view>
+      <view class="empty-title">还没有发布拼局</view>
+      <view class="empty-subtitle">快去发布你的第一个拼局活动吧</view>
       <button class="publish-btn" bindtap="publishNewCarpool">
         立即发布
       </button>

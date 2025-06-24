@@ -113,7 +113,7 @@ Page({
     const { friendInfo } = this.data
     
     return {
-      title: friendInfo ? `${friendInfo.nickName}的拼车信息` : '拼车小程序',
+      title: friendInfo ? `${friendInfo.nickName}的拼局信息` : '拼局小程序',
       path: '/pages/index/index',
       imageUrl: friendInfo?.avatarUrl || ''
     }
@@ -123,7 +123,7 @@ Page({
     const { friendInfo } = this.data
     
     return {
-      title: friendInfo ? `${friendInfo.nickName}的拼车信息` : '拼车小程序',
+      title: friendInfo ? `${friendInfo.nickName}的拼局信息` : '拼局小程序',
       imageUrl: friendInfo?.avatarUrl || ''
     }
   }

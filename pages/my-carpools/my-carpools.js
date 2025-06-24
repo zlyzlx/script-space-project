@@ -1,3 +1,5 @@
+const app = getApp()
+
 Page({
 
   /**
@@ -21,8 +23,9 @@ Page({
   onLoad(options) {
     console.log('我的拼车页面加载')
     // 检查登录状态
-    if (!this.checkLoginStatus()) {
-      return; // 未登录会自动跳转到登录页面
+    if (!app.globalData.hasLogin) {
+      this.requireLogin()
+      return
     }
     this.loadMyCarpools()
   },
@@ -39,8 +42,9 @@ Page({
    */
   onShow() {
     // 每次显示时检查登录并刷新数据
-    if (!this.checkLoginStatus()) {
-      return; // 未登录会自动跳转到登录页面
+    if (!app.globalData.hasLogin) {
+      this.requireLogin()
+      return
     }
     this.loadMyCarpools()
   },
@@ -81,7 +85,7 @@ Page({
    */
   onShareAppMessage() {
     return {
-      title: '我的拼车发布',
+      title: '我的拼局发布',
       path: '/pages/my-carpools/my-carpools'
     }
   },
@@ -163,8 +167,11 @@ Page({
 
   editCarpool(e) {
     // 检查登录状态
-    if (!this.checkLoginStatus()) {
-      return;
+    if (!app.globalData.hasLogin) {
+      app.requireAuth(() => {
+        this.editCarpool(e)
+      })
+      return
     }
     
     const carpoolId = e.currentTarget.dataset.id
@@ -175,15 +182,18 @@ Page({
 
   async cancelCarpool(e) {
     // 检查登录状态
-    if (!this.checkLoginStatus()) {
-      return;
+    if (!app.globalData.hasLogin) {
+      app.requireAuth(() => {
+        this.cancelCarpool(e)
+      })
+      return
     }
     
     const carpoolId = e.currentTarget.dataset.id
     
     wx.showModal({
       title: '确认取消',
-      content: '确定要取消这个拼车吗？',
+              content: '确定要取消这个拼局吗？',
       confirmText: '确定',
       cancelText: '取消',
       success: async (res) => {
@@ -228,7 +238,7 @@ Page({
     const carpool = this.data.carpoolList.find(item => item.id === id)
     
     return {
-      title: `${carpool.activityName} - 拼车信息`,
+              title: `${carpool.activityName} - 拼局信息`,
       path: `/pages/carpool-detail/carpool-detail?id=${id}`,
       imageUrl: ''
     }
@@ -265,30 +275,10 @@ Page({
     // 阻止事件冒泡，用于按钮点击时不触发父级的点击事件
   },
 
-  // 检查登录状态
-  checkLoginStatus() {
-    const app = getApp()
-    const userInfo = app.globalData.userInfo
-    const isLoggedIn = userInfo && userInfo.nickName && !userInfo.isGuest
-    
-    if (!isLoggedIn) {
-      wx.showModal({
-        title: '需要登录',
-        content: '查看我的拼车需要微信授权登录',
-        confirmText: '去登录',
-        cancelText: '取消',
-        success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({
-              url: '/pages/auth/auth'
-            })
-          } else {
-            wx.navigateBack()
-          }
-        }
-      })
-      return false
-    }
-    return true
+  // 要求登录
+  requireLogin() {
+    app.requireAuth(() => {
+      this.loadMyCarpools()
+    })
   }
 }) 

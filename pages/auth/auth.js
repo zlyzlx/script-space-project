@@ -27,7 +27,7 @@ Page({
     this.setData({ loading: true })
     
     wx.getUserProfile({
-      desc: '用于完善用户资料和提供拼车服务',
+              desc: '用于完善用户资料和提供拼局服务',
       success: (res) => {
         console.log('获取用户信息成功', res)
         const userInfo = res.userInfo
@@ -46,7 +46,7 @@ Page({
         this.setData({ loading: false })
         wx.showModal({
           title: '授权失败',
-          content: '需要微信授权才能使用拼车功能，请重新尝试授权',
+          content: '需要微信授权才能使用拼局功能，请重新尝试授权',
           showCancel: false,
           confirmText: '我知道了'
         })
@@ -74,7 +74,7 @@ Page({
     } else {
       wx.showModal({
         title: '授权失败',
-        content: '需要微信授权才能使用拼车功能，请同意授权',
+                  content: '需要微信授权才能使用拼局功能，请同意授权',
         showCancel: false,
         confirmText: '我知道了'
       })

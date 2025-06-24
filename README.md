@@ -1,10 +1,10 @@
-# 剧本杀拼车小程序
+# 剧本杀拼局小程序
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![WeChat MiniProgram](https://img.shields.io/badge/WeChat-MiniProgram-green.svg)](https://developers.weixin.qq.com/miniprogram/dev/)
 [![Node.js](https://img.shields.io/badge/Node.js-16.x-brightgreen.svg)](https://nodejs.org/)
 
-一个基于微信小程序的剧本杀拼车社交平台，帮助剧本杀爱好者寻找同行伙伴，减少出行成本，提升游戏体验。
+一个基于微信小程序的剧本杀拼局社交平台，帮助剧本杀爱好者寻找同行伙伴，减少出行成本，提升活动体验。
 
 ## 🎯 项目特色
 

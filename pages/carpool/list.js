@@ -193,38 +193,25 @@ Page({
     })
   },
 
-  // 检查登录状态
-  checkLoginStatus() {
-    const app = getApp()
-    const userInfo = app.globalData.userInfo
-    const isLoggedIn = userInfo && userInfo.nickName && !userInfo.isGuest
-    
-    if (!isLoggedIn) {
-      wx.showModal({
-        title: '需要登录',
-        content: '此功能需要微信授权登录才能使用',
-        confirmText: '去登录',
-        cancelText: '取消',
-        success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({
-              url: '/pages/auth/auth'
-            })
-          } else {
-            wx.navigateBack()
-          }
-        }
+
+
+  // 发布拼车
+  goToPublish() {
+    app.requireAuth(() => {
+      wx.navigateTo({
+        url: '/pages/publish-carpool/publish-carpool'
       })
-      return false
-    }
-    return true
+    })
   },
 
   // 参与拼车
   async joinCarpool(e) {
     // 检查登录状态
-    if (!this.checkLoginStatus()) {
-      return;
+    if (!app.globalData.hasLogin) {
+      app.requireAuth(() => {
+        this.joinCarpool(e)
+      })
+      return
     }
     
     const carpoolId = e.currentTarget.dataset.id

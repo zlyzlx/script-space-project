@@ -28,17 +28,18 @@ exports.main = async (event, context) => {
     
     // 如果是查询当前用户，返回完整信息
     if (!openid || openid === wxContext.OPENID) {
-      return {
-        success: true,
-        data: {
-          _id: userData._id,
-          nickName: userData.nickName || '未设置昵称',
-          avatarUrl: userData.avatarUrl || '/images/default-avatar.png',
-          phone: userData.phone, // 当前用户可以看到自己的电话
-          createTime: userData.createTime,
-          updateTime: userData.updateTime
+              return {
+          success: true,
+          data: {
+            _id: userData._id,
+            _openid: userData._openid,
+            nickName: userData.nickName || userData.nickname || '微信用户',
+            avatarUrl: userData.avatarUrl || userData.avatar || '',
+            phone: userData.phone, // 当前用户可以看到自己的电话
+            createTime: userData.createTime,
+            updateTime: userData.updateTime
+          }
         }
-      }
     }
     
     // 如果是查询其他用户，查询统计信息（用于好友页面）
@@ -59,8 +60,8 @@ exports.main = async (event, context) => {
     // 返回用户信息（隐私保护）
     const userInfo = {
       _id: userData._id,
-      nickName: userData.nickName || '匿名用户',
-      avatarUrl: userData.avatarUrl || '/images/default-avatar.png',
+      nickName: userData.nickName || userData.nickname || '微信用户',
+      avatarUrl: userData.avatarUrl || userData.avatar || '',
       carpoolCount: carpoolCount.total || 0,
       ridesCount: ridesCount.total || 0,
       // 不返回敏感信息如电话号码等

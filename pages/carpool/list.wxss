@@ -2,7 +2,7 @@
 .container {
   background: linear-gradient(135deg, #ffc1cc 0%, #ffb3ba 100%);
   min-height: 100vh;
-  padding-bottom: 120rpx;
+  padding-bottom: 350rpx; /* 悬浮按钮120rpx + bottom40rpx + 阴影24rpx + 安全缓冲56rpx + 额外留白110rpx */
 }
 
 /* 搜索栏 */

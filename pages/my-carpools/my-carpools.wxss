@@ -3,7 +3,7 @@
   padding: 20rpx;
   background: #fef0f0;
   min-height: 100vh;
-  padding-bottom: 120rpx;
+  padding-bottom: 350rpx; /* 悬浮按钮120rpx + bottom40rpx + 阴影24rpx + 安全缓冲56rpx + 额外留白110rpx */
 }
 
 /* 页面头部 */

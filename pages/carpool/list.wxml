@@ -4,7 +4,7 @@
   <view class="search-bar">
     <input 
       class="search-input" 
-      placeholder="搜索拼车活动..." 
+      placeholder="搜索拼局活动..." 
       bindinput="onSearchInput"
       bindconfirm="onSearch"
       value="{{searchKeyword}}"
@@ -45,8 +45,8 @@
 
     <view wx:elif="{{carpools.length === 0}}" class="empty-container">
       <view class="empty-icon">🚗</view>
-      <view class="empty-text">暂无拼车信息</view>
-      <view class="empty-desc">快来发布第一个拼车吧！</view>
+      <view class="empty-text">暂无拼局信息</view>
+      <view class="empty-desc">快来发布第一个拼局吧！</view>
     </view>
 
     <view wx:else>
@@ -119,8 +119,8 @@
 
   <!-- 发布按钮 -->
   <view class="fab-container">
-    <navigator url="/pages/publish-carpool/publish-carpool" class="fab-btn">
+    <view class="fab-btn" bindtap="goToPublish">
       <text class="fab-icon">+</text>
-    </navigator>
+    </view>
   </view>
 </view>

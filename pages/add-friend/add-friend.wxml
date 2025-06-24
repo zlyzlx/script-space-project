@@ -5,8 +5,8 @@
       <view class="friend-details">
         <view class="friend-name">{{friendInfo.nickName}}</view>
         <view class="friend-stats">
-          <text class="stat-item">发布拼车 {{friendInfo.carpoolCount || 0}} 次</text>
-          <text class="stat-item">参与拼车 {{friendInfo.ridesCount || 0}} 次</text>
+                    <text class="stat-item">发布拼局 {{friendInfo.carpoolCount || 0}} 次</text>
+    <text class="stat-item">参与拼局 {{friendInfo.ridesCount || 0}} 次</text>
         </view>
       </view>
     </view>
@@ -16,12 +16,12 @@
         💬 发送消息
       </button>
       <button class="view-carpools-btn" bindtap="viewFriendCarpools">
-        🚗 查看TA的拼车
+        🚗 查看TA的拼局
       </button>
     </view>
     
     <view class="friend-tip">
-      <text>通过扫描二维码添加好友，可以更方便地联系和查看拼车信息</text>
+      <text>通过扫描二维码添加好友，可以更方便地联系和查看拼局信息</text>
     </view>
   </view>
   

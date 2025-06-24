@@ -56,7 +56,7 @@
       <!-- 操作按钮 -->
       <view class="ride-actions">
         <button class="action-btn contact-btn" bindtap="contactOrganizer" data-id="{{item.id}}">联系组织者</button>
-        <button class="action-btn quit-btn" wx:if="{{item.status === '即将开始'}}" bindtap="quitRide" data-id="{{item.id}}">退出拼车</button>
+        <button class="action-btn quit-btn" wx:if="{{item.status === '即将开始'}}" bindtap="quitRide" data-id="{{item.id}}">退出拼局</button>
         <button class="action-btn rate-btn" wx:if="{{item.status === '已完成' && !item.hasRated}}" bindtap="rateRide" data-id="{{item.id}}">评价</button>
       </view>
     </view>
@@ -65,8 +65,8 @@
   <!-- 空状态 -->
   <view class="empty-state" wx:if="{{myRidesList.length === 0}}">
     <image class="empty-icon" src="/images/empty-rides.png" mode="aspectFit" />
-    <text class="empty-text">还没有参与过拼车</text>
-    <text class="empty-desc">快去加入一个拼车吧！</text>
-    <button class="browse-btn" bindtap="goToBrowse">浏览拼车</button>
+              <text class="empty-text">还没有参与过拼局</text>
+    <text class="empty-desc">快去加入一个拼局吧！</text>
+    <button class="browse-btn" bindtap="goToBrowse">浏览拼局</button>
   </view>
 </view> 

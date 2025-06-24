@@ -20,7 +20,7 @@
         <view class="info-row">
           <view class="info-icon">📅</view>
           <view class="info-label">时间：</view>
-          <view class="info-value">{{carpoolDetail.date}} {{carpoolDetail.time}}</view>
+          <view class="info-value">{{carpoolDetail.departureTime || (carpoolDetail.date + ' ' + carpoolDetail.time)}}</view>
         </view>
         <view class="info-row" bindtap="showLocation">
           <view class="info-icon">📍</view>
@@ -34,7 +34,7 @@
         </view>
         <view class="info-row">
           <view class="info-icon">💰</view>
-          <view class="info-label">费用：</view>
+          <view class="info-label">AA费用：</view>
           <view class="info-value price">¥{{carpoolDetail.price}}/人</view>
         </view>
       </view>
@@ -62,7 +62,9 @@
 
     <!-- 参与者列表 -->
     <view class="detail-card">
-      <view class="section-title">参与者 ({{carpoolDetail.participants.length}}人)</view>
+      <view class="participants-header">
+        <view class="section-title">参与者 ({{carpoolDetail.participants.length}}人)</view>
+      </view>
       <view class="participants-list">
         <view class="participant" wx:for="{{carpoolDetail.participants}}" wx:key="id">
           <image class="participant-avatar" src="{{item.avatar}}" mode="scaleToFill"></image>
@@ -79,7 +81,9 @@
 
     <!-- 注意事项 -->
     <view wx:if="{{carpoolDetail.notes}}" class="detail-card">
-      <view class="section-title">注意事项</view>
+      <view class="notes-header">
+        <view class="section-title">注意事项</view>
+      </view>
       <view class="notes-content">{{carpoolDetail.notes}}</view>
     </view>
 
@@ -95,7 +99,7 @@
         <button wx:elif="{{isParticipant}}" 
                 class="quit-btn" 
                 bindtap="quitCarpool">
-          退出拼车
+                      退出拼局
         </button>
         <button wx:else 
                 class="disabled-btn" 
@@ -107,7 +111,7 @@
       <!-- 组织者操作 -->
       <view wx:else class="organizer-actions">
         <button class="edit-btn">编辑信息</button>
-        <button class="cancel-btn">取消拼车</button>
+                  <button class="cancel-btn">取消拼局</button>
       </view>
     </view>
   </view>
