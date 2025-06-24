@@ -125,11 +125,19 @@ exports.main = async (event, context) => {
       await createTestData()
     }
     
+    // 初始化联系记录集合
+    try {
+      await db.createCollection('contact_records')
+      console.log('联系记录集合创建成功')
+    } catch (e) {
+      console.log('联系记录集合已存在或创建失败：', e)
+    }
+    
     console.log('数据库初始化完成!')
     
     return {
       success: true,
-      message: '数据库初始化成功',
+      message: '数据库初始化完成，包括用户、拼局、行程记录和联系记录集合',
       collections: ['carpools', 'carpool_participants', 'users'],
       openid: wxContext.OPENID,
       appid: wxContext.APPID,

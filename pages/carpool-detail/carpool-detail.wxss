@@ -545,3 +545,327 @@
 .save-btn::after {
   border: none;
 }
+
+/* 联系方式相关样式 */
+.contact-guide {
+  margin: 20rpx 0;
+  background: rgba(255, 193, 204, 0.1);
+  border-radius: 12rpx;
+  padding: 20rpx;
+}
+
+.guide-item {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  line-height: 1.5;
+}
+
+.guide-item:last-child {
+  margin-bottom: 0;
+}
+
+.contact-tip {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 5rpx;
+  line-height: 1.4;
+}
+
+.no-wechat {
+  font-size: 28rpx;
+  color: #999;
+  font-style: italic;
+}
+
+.message-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #4ECDC4, #44A08D);
+  color: white;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(78, 205, 196, 0.4);
+  margin-top: 15rpx;
+}
+
+.message-btn::after {
+  border: none;
+}
+
+/* ==================== 参与者管理样式 ==================== */
+
+.participants-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.manage-btn {
+  background: #f0f0f0;
+  color: #666;
+  font-size: 24rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  border: none;
+}
+
+.manage-btn::after {
+  border: none;
+}
+
+.participant.with-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx;
+  margin-bottom: 15rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+}
+
+.participant-info {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.participant-actions {
+  display: flex;
+  gap: 10rpx;
+}
+
+.contact-participant-btn, .remove-participant-btn {
+  font-size: 22rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  border: none;
+}
+
+.contact-participant-btn {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.remove-participant-btn {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.contact-participant-btn::after, .remove-participant-btn::after {
+  border: none;
+}
+
+.contact-status {
+  font-size: 22rpx;
+  margin-top: 5rpx;
+}
+
+.contact-status.contacted {
+  color: #4caf50;
+}
+
+.contact-status.not-contacted {
+  color: #999;
+}
+
+.participants-management-btn {
+  background: linear-gradient(135deg, #ffc1cc, #ffb3ba);
+  color: #666;
+  font-size: 28rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 25rpx;
+  border: none;
+  margin: 0 10rpx;
+}
+
+.participants-management-btn::after {
+  border: none;
+}
+
+/* 参与者管理弹窗 */
+.management-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.management-content {
+  background: white;
+  width: 90%;
+  max-width: 700rpx;
+  max-height: 80vh;
+  border-radius: 24rpx;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+.management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 40rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  background: #fafafa;
+}
+
+.management-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.management-body {
+  padding: 30rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.participants-management-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.management-participant {
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 25rpx;
+  border: 1rpx solid #e9ecef;
+}
+
+.participant-info-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+
+.participant-details {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.participant-details .participant-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.participant-details .join-time {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 5rpx;
+}
+
+.wechat-info {
+  font-size: 24rpx;
+  color: #007aff;
+  margin-bottom: 5rpx;
+}
+
+.participant-management-actions {
+  display: flex;
+  gap: 15rpx;
+}
+
+.participant-management-actions .contact-btn, 
+.participant-management-actions .remove-btn {
+  flex: 1;
+  height: 70rpx;
+  border-radius: 35rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.participant-management-actions .contact-btn {
+  background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+  color: white;
+}
+
+.participant-management-actions .remove-btn {
+  background: linear-gradient(135deg, #ff8a80, #ff5722);
+  color: white;
+}
+
+.participant-management-actions .contact-btn::after,
+.participant-management-actions .remove-btn::after {
+  border: none;
+}
+
+.no-participants {
+  text-align: center;
+  padding: 60rpx 0;
+}
+
+.no-participants-text {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 参与者联系弹窗 */
+.contact-info .info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  margin-bottom: 15rpx;
+}
+
+.contact-info .info-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.contact-info .info-value {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.contact-info .copy-btn {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-size: 24rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  border: none;
+}
+
+.contact-info .copy-btn::after {
+  border: none;
+}
+
+.no-wechat {
+  color: #999;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+.contact-record-btn {
+  background: linear-gradient(135deg, #81c784, #66bb6a);
+  color: white;
+  flex: 1;
+  min-width: 150rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.contact-record-btn::after {
+  border: none;
+}

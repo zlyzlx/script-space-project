@@ -13,8 +13,12 @@ Page({
     isParticipant: false,
     isOrganizer: false,
     loading: true,
-    organizerQRCode: '', // 组织者微信二维码
-    showOrganizerQR: false // 是否显示组织者二维码
+    organizerWechatId: '', // 组织者微信号
+    showOrganizerQR: false, // 是否显示组织者联系方式弹窗
+    showParticipantManagement: false, // 是否显示参与者管理弹窗
+    detailedParticipants: [], // 详细参与者信息
+    showParticipantQR: false, // 是否显示参与者联系方式弹窗
+    selectedParticipant: null // 当前选中的参与者
   },
 
   /**
@@ -324,41 +328,47 @@ Page({
     })
   },
 
-  // 显示组织者微信二维码
+  // 显示组织者联系方式
   async showOrganizerQRCode() {
     const { carpoolDetail } = this.data
     
     try {
       wx.showLoading({
-        title: '获取中...'
+        title: '获取联系方式...'
       })
 
-      // 调用云函数获取组织者的微信二维码
+      // 调用云函数获取组织者的用户信息（包含微信号）
       const result = await wx.cloud.callFunction({
-        name: 'get-user-qrcode',
+        name: 'get-user-info',
         data: {
-          userId: carpoolDetail.organizer.id
+          openid: carpoolDetail.organizer.id
         }
       })
 
       wx.hideLoading()
 
       if (result.result && result.result.success) {
-        // 显示二维码弹窗
+        // 记录联系记录
+        await this.createContactRecord(carpoolDetail.organizer.id, 'view_contact', {
+          organizerInfo: carpoolDetail.organizer
+        })
+
+        // 显示联系方式弹窗
         this.setData({
-          organizerQRCode: result.result.qrCodeUrl,
+          organizerWechatId: result.result.data.wechatId || '',
           showOrganizerQR: true
         })
       } else {
-        throw new Error(result.result?.error || '获取二维码失败')
+        throw new Error(result.result?.error || '获取联系方式失败')
       }
     } catch (error) {
       wx.hideLoading()
-      console.error('获取组织者二维码失败:', error)
-      wx.showModal({
-        title: '提示',
-        content: '组织者暂未设置微信二维码，请尝试其他联系方式',
-        showCancel: false
+      console.error('获取组织者联系方式失败:', error)
+      
+      // 即使获取失败也显示弹窗，但不显示微信号
+      this.setData({
+        organizerWechatId: '',
+        showOrganizerQR: true
       })
     }
   },
@@ -371,44 +381,323 @@ Page({
     })
   },
 
-  // 保存组织者二维码到相册
-  saveOrganizerQRToAlbum() {
-    if (!this.data.organizerQRCode) {
+  // 复制组织者微信号
+  copyOrganizerWechat() {
+    if (!this.data.organizerWechatId) {
       wx.showToast({
-        title: '二维码不存在',
+        title: '微信号不存在',
         icon: 'none'
       })
       return
     }
 
-    wx.saveImageToPhotosAlbum({
-      filePath: this.data.organizerQRCode,
+    wx.setClipboardData({
+      data: this.data.organizerWechatId,
       success: () => {
         wx.showToast({
-          title: '已保存到相册',
+          title: '微信号已复制',
           icon: 'success'
         })
+        
+        // 记录复制联系方式的行为
+        this.createContactRecord(this.data.carpoolDetail.organizer.id, 'copy_wechat', {
+          wechatId: this.data.organizerWechatId
+        })
       },
-      fail: (err) => {
-        if (err.errMsg.includes('auth deny')) {
-          wx.showModal({
-            title: '需要相册权限',
-            content: '保存二维码需要访问您的相册权限',
-            confirmText: '去设置',
-            success: (res) => {
-              if (res.confirm) {
-                wx.openSetting()
-              }
-            }
-          })
-        } else {
-          wx.showToast({
-            title: '保存失败',
-            icon: 'none'
-          })
+      fail: () => {
+        wx.showToast({
+          title: '复制失败',
+          icon: 'none'
+        })
+      }
+    })
+  },
+
+  // 发送消息给组织者
+  sendMessageToOrganizer() {
+    wx.showModal({
+      title: '发送消息',
+      content: '由于微信限制，暂时无法直接发送消息。建议复制微信号到微信中搜索添加好友。',
+      confirmText: '复制微信号',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm && this.data.organizerWechatId) {
+          this.copyOrganizerWechat()
         }
       }
     })
+  },
+
+  // ==================== 参与者管理功能 ====================
+
+  // 显示参与者管理弹窗
+  async showParticipantManagement() {
+    if (!this.data.isOrganizer) {
+      wx.showToast({
+        title: '只有组织者可以管理参与者',
+        icon: 'none'
+      })
+      return
+    }
+
+    // 检查拼局ID是否存在
+    if (!this.data.carpoolId) {
+      console.error('拼局ID不存在:', this.data.carpoolId)
+      wx.showToast({
+        title: '拼局信息异常',
+        icon: 'none'
+      })
+      return
+    }
+
+    try {
+      wx.showLoading({ title: '加载中...' })
+      
+      console.log('调用参与者管理云函数，拼局ID:', this.data.carpoolId)
+      
+      const result = await wx.cloud.callFunction({
+        name: 'carpool-manage-participants',
+        data: {
+          action: 'get_participants',
+          data: {
+            carpoolId: this.data.carpoolId
+          }
+        }
+      })
+
+      wx.hideLoading()
+
+      console.log('云函数返回结果:', result)
+
+      if (result.result && result.result.success) {
+        this.setData({
+          detailedParticipants: result.result.data || [],
+          showParticipantManagement: true
+        })
+      } else {
+        throw new Error(result.result?.error || '获取参与者信息失败')
+      }
+    } catch (error) {
+      wx.hideLoading()
+      console.error('获取参与者详情失败:', error)
+      wx.showToast({
+        title: error.message || '加载失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 隐藏参与者管理弹窗
+  hideParticipantManagement() {
+    this.setData({ 
+      showParticipantManagement: false,
+      detailedParticipants: []
+    })
+  },
+
+  // 联系参与者（简单版）
+  async contactParticipant(e) {
+    const { userId, nickname } = e.currentTarget.dataset
+    await this.contactParticipantAction(userId, nickname)
+  },
+
+  // 联系参与者（详细版）
+  async contactParticipantDetailed(e) {
+    const { userId, nickname } = e.currentTarget.dataset
+    await this.contactParticipantAction(userId, nickname)
+  },
+
+  // 联系参与者的实际操作
+  async contactParticipantAction(userId, nickname) {
+    try {
+      wx.showLoading({ title: '获取联系方式...' })
+
+      const result = await wx.cloud.callFunction({
+        name: 'carpool-manage-participants',
+        data: {
+          action: 'contact_participant',
+          data: {
+            carpoolId: this.data.carpoolId,
+            participantUserId: userId,
+            contactType: 'wechat'
+          }
+        }
+      })
+
+      wx.hideLoading()
+
+      if (result.result.success) {
+        const participantData = result.result.data
+        
+        // 记录联系记录
+        await this.createContactRecord(userId, 'wechat', {
+          wechatId: participantData.wechatId,
+          nickname: participantData.nickname
+        })
+
+        // 显示联系方式弹窗
+        this.setData({
+          selectedParticipant: participantData,
+          showParticipantQR: true
+        })
+
+        // 刷新参与者管理列表
+        if (this.data.showParticipantManagement) {
+          this.showParticipantManagement()
+        }
+      } else {
+        throw new Error(result.result.error)
+      }
+    } catch (error) {
+      wx.hideLoading()
+      console.error('获取参与者联系方式失败:', error)
+      wx.showToast({
+        title: '获取失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 移除参与者（简单版）
+  async removeParticipant(e) {
+    const { userId, nickname } = e.currentTarget.dataset
+    await this.removeParticipantAction(userId, nickname)
+  },
+
+  // 移除参与者（详细版）
+  async removeParticipantDetailed(e) {
+    const { userId, nickname } = e.currentTarget.dataset
+    await this.removeParticipantAction(userId, nickname)
+  },
+
+  // 移除参与者的实际操作
+  async removeParticipantAction(userId, nickname) {
+    wx.showModal({
+      title: '确认移除',
+      content: `确定要移除参与者"${nickname}"吗？移除后TA将无法继续参与此拼局。`,
+      confirmText: '确认移除',
+      confirmColor: '#FF6B6B',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            wx.showLoading({ title: '移除中...' })
+
+            const result = await wx.cloud.callFunction({
+              name: 'carpool-manage-participants',
+              data: {
+                action: 'remove_participant',
+                data: {
+                  carpoolId: this.data.carpoolId,
+                  participantUserId: userId,
+                  reason: '组织者移除'
+                }
+              }
+            })
+
+            wx.hideLoading()
+
+            if (result.result.success) {
+              wx.showToast({
+                title: '已移除参与者',
+                icon: 'success'
+              })
+
+              // 刷新拼局详情
+              this.loadCarpoolDetail(this.data.carpoolId)
+
+              // 刷新参与者管理列表
+              if (this.data.showParticipantManagement) {
+                this.showParticipantManagement()
+              }
+            } else {
+              throw new Error(result.result.error)
+            }
+          } catch (error) {
+            wx.hideLoading()
+            console.error('移除参与者失败:', error)
+            wx.showToast({
+              title: '移除失败',
+              icon: 'none'
+            })
+          }
+        }
+      }
+    })
+  },
+
+  // 隐藏参与者联系方式弹窗
+  hideParticipantQR() {
+    this.setData({ 
+      showParticipantQR: false,
+      selectedParticipant: null
+    })
+  },
+
+  // 复制参与者微信号
+  copyParticipantWechat() {
+    const { selectedParticipant } = this.data
+    if (selectedParticipant && selectedParticipant.wechatId) {
+      wx.setClipboardData({
+        data: selectedParticipant.wechatId,
+        success: () => {
+          wx.showToast({
+            title: '微信号已复制',
+            icon: 'success'
+          })
+        }
+      })
+    }
+  },
+
+  // 标记为已联系
+  async markAsContacted() {
+    const { selectedParticipant } = this.data
+    if (!selectedParticipant) return
+
+    try {
+      await this.createContactRecord(selectedParticipant.userId, 'wechat', {
+        wechatId: selectedParticipant.wechatId,
+        nickname: selectedParticipant.nickname
+      })
+
+      wx.showToast({
+        title: '已标记为已联系',
+        icon: 'success'
+      })
+
+      this.hideParticipantQR()
+
+      // 刷新参与者管理列表
+      if (this.data.showParticipantManagement) {
+        this.showParticipantManagement()
+      }
+    } catch (error) {
+      console.error('标记联系失败:', error)
+      wx.showToast({
+        title: '标记失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 创建联系记录
+  async createContactRecord(contactedUserId, contactType, contactInfo) {
+    try {
+      await wx.cloud.callFunction({
+        name: 'contact-record',
+        data: {
+          action: 'create',
+          data: {
+            contactedUserId: contactedUserId,
+            carpoolId: this.data.carpoolId,
+            contactType: contactType,
+            contactInfo: contactInfo
+          }
+        }
+      })
+    } catch (error) {
+      console.error('创建联系记录失败:', error)
+    }
   },
 
   shareCarpool() {

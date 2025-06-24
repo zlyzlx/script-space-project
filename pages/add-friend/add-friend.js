@@ -61,20 +61,39 @@ Page({
   },
 
   // 联系好友
-  contactFriend() {
+  async contactFriend() {
     const { friendInfo } = this.data
     
     if (!friendInfo) return
     
+    // 记录联系记录
+    try {
+      await wx.cloud.callFunction({
+        name: 'contact-record',
+        data: {
+          action: 'create',
+          data: {
+            contactedUserId: friendInfo._openid,
+            contactType: 'scan_qr',
+            contactInfo: {
+              nickname: friendInfo.nickName,
+              scannedFrom: 'qr_code'
+            }
+          }
+        }
+      })
+    } catch (error) {
+      console.log('记录联系失败:', error)
+    }
+    
     wx.showModal({
       title: '联系方式',
-      content: '由于微信限制，暂时无法直接发送消息。建议您在微信中搜索对方昵称或通过其他方式联系。',
+      content: '已记录您的联系意向。由于微信限制，暂时无法直接发送消息。建议您在微信中搜索对方昵称或通过其他方式联系。',
       showCancel: true,
-      confirmText: '我知道了',
+      confirmText: '复制昵称',
       cancelText: '返回',
       success: (res) => {
         if (res.confirm) {
-          // 可以在这里添加复制昵称到剪贴板的功能
           wx.setClipboardData({
             data: friendInfo.nickName,
             success: () => {

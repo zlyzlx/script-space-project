@@ -594,10 +594,32 @@
   margin-bottom: 20rpx;
 }
 
-.qr-canvas {
+.qr-code-image {
   border: 1rpx solid #e5e7eb;
   border-radius: 12rpx;
   background: white;
+}
+
+.qr-loading, .qr-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 12rpx;
+}
+
+.loading-icon, .error-icon {
+  font-size: 48rpx;
+  margin-bottom: 20rpx;
+}
+
+.loading-text, .error-text {
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+  line-height: 1.4;
 }
 
 .qr-info {

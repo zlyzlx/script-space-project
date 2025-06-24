@@ -14,17 +14,24 @@ exports.main = async (event, context) => {
   const targetOpenid = openid || wxContext.OPENID
   
   try {
-    // 查询用户信息
-    const userResult = await db.collection('users').doc(targetOpenid).get()
+    console.log('查询用户信息 - targetOpenid:', targetOpenid)
     
-    if (!userResult.data) {
+    // 查询用户信息（使用 _openid 字段查询）
+    const userResult = await db.collection('users')
+      .where({
+        _openid: targetOpenid
+      })
+      .get()
+    
+    if (!userResult.data || userResult.data.length === 0) {
+      console.log('用户不存在:', targetOpenid)
       return {
         success: false,
         message: '用户不存在'
       }
     }
     
-    const userData = userResult.data
+    const userData = userResult.data[0]
     
     // 如果是查询当前用户，返回完整信息
     if (!openid || openid === wxContext.OPENID) {
@@ -36,6 +43,7 @@ exports.main = async (event, context) => {
             nickName: userData.nickName || userData.nickname || '微信用户',
             avatarUrl: userData.avatarUrl || userData.avatar || '',
             phone: userData.phone, // 当前用户可以看到自己的电话
+            wechatId: userData.wechatId || '', // 当前用户可以看到自己的微信号
             createTime: userData.createTime,
             updateTime: userData.updateTime
           }
@@ -62,6 +70,7 @@ exports.main = async (event, context) => {
       _id: userData._id,
       nickName: userData.nickName || userData.nickname || '微信用户',
       avatarUrl: userData.avatarUrl || userData.avatar || '',
+      wechatId: userData.wechatId || '', // 允许查看其他用户的微信号（用于联系）
       carpoolCount: carpoolCount.total || 0,
       ridesCount: ridesCount.total || 0,
       // 不返回敏感信息如电话号码等

@@ -185,47 +185,56 @@
           <view class="info-item">
             <text class="info-label">微信号：</text>
             <input 
-              wx:if="{{!wechatId}}"
+              wx:if="{{!wechatId || editingWechatId}}"
               class="wechat-input"
-              placeholder="输入您的微信号"
+              placeholder="设置您的微信号"
               value="{{inputWechatId}}"
               bindinput="onWechatIdInput"
               bindblur="saveWechatId"
               maxlength="20"
             />
             <text wx:else class="info-value">{{wechatId}}</text>
-            <button wx:if="{{wechatId}}" class="edit-btn" bindtap="editWechatId">编辑</button>
+            <button wx:if="{{wechatId && !editingWechatId}}" class="edit-btn" bindtap="editWechatId">编辑</button>
           </view>
         </view>
         
-        <view wx:if="{{wechatId}}" class="qr-code-section">
+        <view class="qr-code-section">
           <view class="qr-code-container">
-            <canvas 
-              canvas-id="qrCanvas"
-              class="qr-canvas"
+            <image 
+              wx:if="{{qrCodeGenerated && wechatQRCode}}"
+              class="qr-code-image" 
+              src="{{wechatQRCode}}" 
+              mode="aspectFit"
               style="width: 400rpx; height: 400rpx;"
-            ></canvas>
+            ></image>
+            <view 
+              wx:elif="{{qrCodeError}}"
+              class="qr-error"
+              style="width: 400rpx; height: 400rpx;"
+            >
+              <view class="error-icon">⚠️</view>
+              <view class="error-text">{{qrCodeError}}</view>
+            </view>
+            <view 
+              wx:else
+              class="qr-loading"
+              style="width: 400rpx; height: 400rpx;"
+            >
+              <view class="loading-icon">⏳</view>
+              <view class="loading-text">生成中...</view>
+            </view>
           </view>
           <view class="qr-info">
-            <text class="qr-desc">扫描二维码获取微信号：{{wechatId}}</text>
+            <text class="qr-desc">扫描二维码添加好友或查看拼局信息</text>
           </view>
         </view>
         
-        <view wx:else class="contact-guide">
-          <view class="guide-title">💬 设置微信号</view>
-          <view class="guide-text">输入您的微信号，生成专属二维码方便他人添加</view>
-          <view class="guide-steps">
-            <view class="step-item">1. 在上方输入您的微信号</view>
-            <view class="step-item">2. 系统将生成包含微信号的二维码</view>
-            <view class="step-item">3. 其他用户扫码可获取您的微信号</view>
-          </view>
-        </view>
+
         
         <view class="qr-actions">
-          <button wx:if="{{wechatId}}" class="copy-btn" bindtap="copyWechatId">复制微信号</button>
-          <button wx:else class="copy-btn" bindtap="copyNickname">复制昵称</button>
+          <button class="copy-btn" bindtap="copyNickname">复制昵称</button>
           <button class="share-btn" bindtap="shareProfile">分享名片</button>
-          <button wx:if="{{wechatId}}" class="save-btn" bindtap="saveQRCode">保存二维码</button>
+          <button wx:if="{{qrCodeGenerated && wechatQRCode}}" class="save-btn" bindtap="saveQRCode">保存二维码</button>
         </view>
       </view>
     </view>

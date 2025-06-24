@@ -209,9 +209,9 @@ Page({
 
   // 查看拼车详情
   viewCarpoolDetail(e) {
-    const carpoolId = e.currentTarget.dataset.id
-    wx.navigateTo({
-      url: `/pages/carpool-detail/carpool-detail?id=${carpoolId}`
+      const carpoolId = e.currentTarget.dataset.id
+      wx.navigateTo({
+        url: `/pages/carpool-detail/carpool-detail?id=${carpoolId}`
     })
   },
 

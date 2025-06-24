@@ -14,7 +14,12 @@ Page({
     loading: true,
     wechatQRCode: '', // 微信二维码图片路径
     showQRCode: false, // 是否显示二维码
-    tempNickname: '' // 临时昵称（未登录状态使用）
+    tempNickname: '', // 临时昵称（未登录状态使用）
+    qrCodeGenerated: false, // 二维码是否生成成功
+    qrCodeError: '', // 二维码生成错误信息
+    wechatId: '', // 用户微信号
+    inputWechatId: '', // 输入的微信号
+    editingWechatId: false // 是否正在编辑微信号
   },
 
   /**
@@ -22,6 +27,14 @@ Page({
    */
   onLoad(options) {
     console.log('个人中心页面加载')
+    
+    // 初始化页面数据
+    this.setData({
+      qrCodeGenerated: false,
+      qrCodeError: '',
+      wechatQRCode: ''
+    })
+    
     this.initPage()
   },
 
@@ -191,6 +204,7 @@ Page({
         this.setData({
           userInfo: userInfo,
           hasUserInfo: !!userInfo,
+          wechatId: userInfo.wechatId || '', // 加载微信号
           loading: false
         })
         
@@ -713,134 +727,46 @@ Page({
     }
   },
 
-  // 复制微信号
-  copyWechatId() {
-    if (this.data.wechatId) {
-      wx.setClipboardData({
-        data: this.data.wechatId,
-        success: () => {
-          wx.showToast({
-            title: '微信号已复制',
-            icon: 'success'
-          })
-        },
-        fail: () => {
-          wx.showToast({
-            title: '复制失败',
-            icon: 'none'
-          })
-        }
-      })
-    }
-  },
 
-  // 输入微信号
-  onWechatIdInput(e) {
-    this.setData({
-      inputWechatId: e.detail.value
-    })
-  },
-
-  // 保存微信号
-  saveWechatId() {
-    const wechatId = this.data.inputWechatId.trim()
-    if (wechatId) {
-      this.setData({
-        wechatId: wechatId,
-        inputWechatId: ''
-      })
-      
-      // 保存到本地存储
-      wx.setStorageSync('wechatId', wechatId)
-      
-      // 生成二维码
-      this.generateQRCode(wechatId)
-      
-      wx.showToast({
-        title: '微信号已保存',
-        icon: 'success'
-      })
-    }
-  },
-
-  // 编辑微信号
-  editWechatId() {
-    this.setData({
-      inputWechatId: this.data.wechatId,
-      wechatId: ''
-    })
-  },
-
-  // 生成二维码
-  generateQRCode(text) {
-    const ctx = wx.createCanvasContext('qrCanvas', this)
-    
-    // 简单的文本二维码替代方案
-    // 实际项目中建议使用专业的二维码生成库
-    ctx.setFillStyle('#ffffff')
-    ctx.fillRect(0, 0, 200, 200)
-    
-    ctx.setFillStyle('#000000')
-    ctx.setFontSize(16)
-    ctx.setTextAlign('center')
-    
-    // 绘制标题
-    ctx.fillText('微信号', 100, 40)
-    ctx.fillText(text, 100, 80)
-    
-    // 绘制简单的方块图案作为装饰
-    for (let i = 0; i < 10; i++) {
-      for (let j = 0; j < 10; j++) {
-        if ((i + j) % 2 === 0) {
-          ctx.fillRect(20 + i * 16, 100 + j * 8, 8, 8)
-        }
-      }
-    }
-    
-    ctx.draw()
-  },
 
   // 保存二维码
   saveQRCode() {
-    wx.canvasToTempFilePath({
-      canvasId: 'qrCanvas',
-      success: (res) => {
-        wx.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
-          success: () => {
-            wx.showToast({
-              title: '已保存到相册',
-              icon: 'success'
-            })
-          },
-          fail: (err) => {
-            if (err.errMsg.includes('auth deny')) {
-              wx.showModal({
-                title: '需要相册权限',
-                content: '保存二维码需要访问您的相册权限',
-                confirmText: '去设置',
-                success: (res) => {
-                  if (res.confirm) {
-                    wx.openSetting()
-                  }
-                }
-              })
-            } else {
-              wx.showToast({
-                title: '保存失败',
-                icon: 'none'
-              })
-            }
-          }
+    if (!this.data.wechatQRCode || !this.data.qrCodeGenerated) {
+      wx.showToast({
+        title: '二维码尚未生成',
+        icon: 'none'
+      })
+      return
+    }
+
+    wx.saveImageToPhotosAlbum({
+      filePath: this.data.wechatQRCode,
+      success: () => {
+        wx.showToast({
+          title: '已保存到相册',
+          icon: 'success'
         })
       },
-      fail: () => {
-        wx.showToast({
-          title: '生成图片失败',
-          icon: 'none'
-        })
+      fail: (err) => {
+        if (err.errMsg.includes('auth deny')) {
+          wx.showModal({
+            title: '需要相册权限',
+            content: '保存二维码需要访问您的相册权限',
+            confirmText: '去设置',
+            success: (res) => {
+              if (res.confirm) {
+                wx.openSetting()
+              }
+            }
+          })
+        } else {
+          wx.showToast({
+            title: '保存失败',
+            icon: 'none'
+          })
+        }
       }
-    }, this)
+    })
   },
 
   // 分享名片
@@ -856,7 +782,7 @@ Page({
   },
 
   // 显示我的名片
-  showMyQRCode() {
+  async showMyQRCode() {
     // 检查是否有昵称（已登录用户或临时昵称）
     const nickname = this.data.hasUserInfo ? 
       (this.data.userInfo.nickName || this.data.userInfo.nickname) : 
@@ -870,12 +796,129 @@ Page({
       return
     }
 
+    // 显示二维码弹窗
     this.setData({ showQRCode: true })
+    
+    // 如果已登录，获取真实的微信小程序码
+    if (this.data.hasUserInfo && this.data.userInfo._openid) {
+      try {
+        wx.showLoading({
+          title: '生成二维码中...'
+        })
+
+        const result = await wx.cloud.callFunction({
+          name: 'get-user-qrcode',
+          data: {
+            userId: this.data.userInfo._openid
+          }
+        })
+
+        wx.hideLoading()
+
+        if (result.result && result.result.success) {
+          this.setData({
+            wechatQRCode: result.result.qrCodeUrl,
+            qrCodeGenerated: true
+          })
+        } else {
+          throw new Error(result.result?.error || '生成二维码失败')
+        }
+      } catch (error) {
+        wx.hideLoading()
+        console.error('生成二维码失败:', error)
+        // 如果生成失败，显示提示信息
+        this.setData({
+          qrCodeGenerated: false,
+          qrCodeError: '二维码生成失败，请稍后重试'
+        })
+      }
+    } else {
+      // 未登录状态，显示提示
+      this.setData({
+        qrCodeGenerated: false,
+        qrCodeError: '请先完成微信登录后生成二维码'
+      })
+    }
   },
 
   // 隐藏二维码
   hideQRCode() {
     this.setData({ showQRCode: false })
+  },
+
+  // 输入微信号
+  onWechatIdInput(e) {
+    this.setData({
+      inputWechatId: e.detail.value
+    })
+  },
+
+  // 保存微信号
+  async saveWechatId() {
+    const wechatId = this.data.inputWechatId.trim()
+    
+    if (!wechatId) {
+      // 如果输入为空，取消编辑
+      this.setData({
+        editingWechatId: false,
+        inputWechatId: this.data.wechatId
+      })
+      return
+    }
+
+    if (wechatId === this.data.wechatId) {
+      // 如果没有改变，取消编辑状态
+      this.setData({
+        editingWechatId: false
+      })
+      return
+    }
+
+    try {
+      wx.showLoading({
+        title: '保存中...'
+      })
+
+      // 调用云函数更新用户信息
+      const result = await wx.cloud.callFunction({
+        name: 'update-user-info',
+        data: {
+          wechatId: wechatId
+        }
+      })
+
+      wx.hideLoading()
+
+      if (result.result && result.result.success) {
+        this.setData({
+          wechatId: wechatId,
+          editingWechatId: false,
+          inputWechatId: ''
+        })
+        
+        wx.showToast({
+          title: '微信号已保存',
+          icon: 'success'
+        })
+      } else {
+        throw new Error(result.result?.error || '保存失败')
+      }
+    } catch (error) {
+      wx.hideLoading()
+      console.error('保存微信号失败:', error)
+      wx.showToast({
+        title: '保存失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 编辑微信号
+  editWechatId() {
+    this.setData({
+      editingWechatId: true,
+      inputWechatId: this.data.wechatId
+    })
   },
 
 

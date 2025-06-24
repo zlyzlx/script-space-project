@@ -64,12 +64,28 @@
     <view class="detail-card">
       <view class="participants-header">
         <view class="section-title">参与者 ({{carpoolDetail.participants.length}}人)</view>
+        <button wx:if="{{isOrganizer && carpoolDetail.participants.length > 0}}" 
+                class="manage-btn" 
+                bindtap="showParticipantManagement">管理</button>
       </view>
       <view class="participants-list">
-        <view class="participant" wx:for="{{carpoolDetail.participants}}" wx:key="id">
+        <view class="participant {{isOrganizer ? 'with-actions' : ''}}" wx:for="{{carpoolDetail.participants}}" wx:key="id">
           <image class="participant-avatar" src="{{item.avatar}}" mode="scaleToFill"></image>
-          <view class="participant-name">{{item.nickname}}</view>
-          <view class="join-time">{{item.joinTime}}</view>
+          <view class="participant-info">
+            <view class="participant-name">{{item.nickname}}</view>
+            <view class="join-time">{{item.joinTime}}</view>
+            <view wx:if="{{isOrganizer && item.hasContacted}}" class="contact-status">已联系</view>
+          </view>
+          <view wx:if="{{isOrganizer}}" class="participant-actions">
+            <button class="contact-participant-btn" 
+                    data-user-id="{{item.userId}}" 
+                    data-nickname="{{item.nickname}}"
+                    bindtap="contactParticipant">联系</button>
+            <button class="remove-participant-btn" 
+                    data-user-id="{{item.userId}}" 
+                    data-nickname="{{item.nickname}}"
+                    bindtap="removeParticipant">移除</button>
+          </view>
         </view>
         <!-- 空位展示 -->
         <view wx:for="{{carpoolDetail.maxCount - carpoolDetail.participants.length}}" wx:key="*this" class="participant empty-slot">
@@ -111,16 +127,17 @@
       <!-- 组织者操作 -->
       <view wx:else class="organizer-actions">
         <button class="edit-btn">编辑信息</button>
-                  <button class="cancel-btn">取消拼局</button>
+        <button class="participants-management-btn" bindtap="showParticipantManagement">管理参与者</button>
+        <button class="cancel-btn">取消拼局</button>
       </view>
     </view>
   </view>
 
-  <!-- 组织者微信二维码弹窗 -->
+  <!-- 组织者联系方式弹窗 -->
   <view wx:if="{{showOrganizerQR}}" class="qr-modal" bindtap="hideOrganizerQR">
     <view class="qr-content" catchtap="{{true}}">
       <view class="qr-header">
-        <view class="qr-title">组织者微信二维码</view>
+        <view class="qr-title">联系组织者</view>
         <button class="close-btn" bindtap="hideOrganizerQR">✕</button>
       </view>
       
@@ -128,16 +145,108 @@
         <view class="qr-user-info">
           <image class="qr-avatar" src="{{carpoolDetail.organizer.avatar}}" mode="scaleToFill"></image>
           <view class="qr-name">{{carpoolDetail.organizer.nickname}}</view>
-          <view class="qr-tip">扫描二维码，添加组织者为好友</view>
+          <view class="qr-tip">组织者联系方式</view>
         </view>
         
-        <view class="qr-code-container">
-          <image wx:if="{{organizerQRCode}}" class="qr-code" src="{{organizerQRCode}}" mode="aspectFit"></image>
-          <view wx:else class="qr-loading">获取中...</view>
+        <view class="contact-info">
+          <view wx:if="{{organizerWechatId}}" class="info-item">
+            <text class="info-label">微信号：</text>
+            <text class="info-value">{{organizerWechatId}}</text>
+          </view>
+          <view wx:else class="info-item">
+            <text class="no-wechat">组织者暂未设置微信号</text>
+            <text class="contact-tip">建议通过小程序内消息联系</text>
+          </view>
+          
+          <view class="contact-guide">
+            <view class="guide-item">💬 复制微信号到微信中搜索添加</view>
+            <view class="guide-item">📱 或通过小程序内消息功能联系</view>
+          </view>
         </view>
         
         <view class="qr-actions">
-          <button class="save-btn" bindtap="saveOrganizerQRToAlbum">保存到相册</button>
+          <button wx:if="{{organizerWechatId}}" class="copy-btn" bindtap="copyOrganizerWechat">复制微信号</button>
+          <button class="message-btn" bindtap="sendMessageToOrganizer">发送消息</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 参与者管理弹窗 -->
+  <view wx:if="{{showParticipantManagement}}" class="management-modal" bindtap="hideParticipantManagement">
+    <view class="management-content" catchtap="{{true}}">
+      <view class="management-header">
+        <view class="management-title">参与者管理</view>
+        <button class="close-btn" bindtap="hideParticipantManagement">✕</button>
+      </view>
+      
+      <view class="management-body">
+        <view class="participants-management-list">
+          <view class="management-participant" wx:for="{{detailedParticipants}}" wx:key="userId">
+            <view class="participant-info-row">
+              <image class="participant-avatar" src="{{item.avatarUrl}}" mode="scaleToFill"></image>
+              <view class="participant-details">
+                <view class="participant-name">{{item.nickname}}</view>
+                <view class="join-time">加入时间：{{item.joinTime}}</view>
+                <view wx:if="{{item.wechatId}}" class="wechat-info">微信号：{{item.wechatId}}</view>
+                <view wx:if="{{item.hasContacted}}" class="contact-status contacted">
+                  已联系 · {{item.lastContactTime}}
+                </view>
+                <view wx:else class="contact-status not-contacted">未联系</view>
+              </view>
+            </view>
+            
+            <view class="participant-management-actions">
+              <button class="contact-btn" 
+                      data-user-id="{{item.userId}}" 
+                      data-nickname="{{item.nickname}}"
+                      bindtap="contactParticipantDetailed">
+                {{item.hasContacted ? '再次联系' : '联系TA'}}
+              </button>
+              <button class="remove-btn" 
+                      data-user-id="{{item.userId}}" 
+                      data-nickname="{{item.nickname}}"
+                      bindtap="removeParticipantDetailed">移除</button>
+            </view>
+          </view>
+        </view>
+        
+        <view wx:if="{{detailedParticipants.length === 0}}" class="no-participants">
+          <view class="no-participants-text">暂无参与者</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系参与者二维码弹窗 -->
+  <view wx:if="{{showParticipantQR}}" class="qr-modal" bindtap="hideParticipantQR">
+    <view class="qr-content" catchtap="{{true}}">
+      <view class="qr-header">
+        <view class="qr-title">参与者联系方式</view>
+        <button class="close-btn" bindtap="hideParticipantQR">✕</button>
+      </view>
+      
+      <view class="qr-body">
+        <view class="qr-user-info">
+          <image class="qr-avatar" src="{{selectedParticipant.avatarUrl}}" mode="scaleToFill"></image>
+          <view class="qr-name">{{selectedParticipant.nickname}}</view>
+          <view class="qr-tip">参与者联系信息</view>
+        </view>
+        
+        <view class="contact-info">
+          <view wx:if="{{selectedParticipant.wechatId}}" class="info-item">
+            <text class="info-label">微信号：</text>
+            <text class="info-value">{{selectedParticipant.wechatId}}</text>
+            <button class="copy-btn" bindtap="copyParticipantWechat">复制</button>
+          </view>
+          <view wx:else class="info-item">
+            <text class="no-wechat">该用户暂未设置微信号</text>
+          </view>
+        </view>
+        
+        <view class="qr-actions">
+          <button wx:if="{{selectedParticipant.wechatId}}" class="copy-btn" bindtap="copyParticipantWechat">复制微信号</button>
+          <button class="contact-record-btn" bindtap="markAsContacted">标记已联系</button>
         </view>
       </view>
     </view>

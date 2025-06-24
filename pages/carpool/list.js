@@ -198,9 +198,9 @@ Page({
   // 发布拼车
   goToPublish() {
     app.requireAuth(() => {
-      wx.navigateTo({
+            wx.navigateTo({
         url: '/pages/publish-carpool/publish-carpool'
-      })
+            })
     })
   },
 
